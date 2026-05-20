@@ -29,6 +29,8 @@ Item {
     property bool mediaAvailable: false
     property string handleStyle: "bump"
     property string batteryHoverText: ""
+    property bool batteryCharging: false
+    property int batteryLevel: 0
     property string timeText: ""
     property string dateText: ""
     property string fontFamily: "Noto Sans"
@@ -45,6 +47,7 @@ Item {
     signal nextRequested
     signal shuffleRequested
     signal loopRequested
+    signal favoriteRequested
     signal seekRequested(real position)
     signal handleStyleRequested(string style)
 
@@ -221,7 +224,8 @@ Item {
 
             HandleStyleSwitch {
                 handleStyle: root.handleStyle
-                batteryText: root.batteryHoverText
+                batteryCharging: root.batteryCharging
+                batteryLevel: root.batteryLevel
                 fontFamily: root.fontFamily
                 showBattery: true
                 onHandleStyleRequested: style => root.handleStyleRequested(style)
@@ -419,7 +423,8 @@ Item {
 
             HandleStyleSwitch {
                 handleStyle: root.handleStyle
-                batteryText: root.batteryHoverText
+                batteryCharging: root.batteryCharging
+                batteryLevel: root.batteryLevel
                 statusText: root.dateText
                 fontFamily: root.fontFamily
                 compact: true
@@ -538,13 +543,11 @@ Item {
                     border.color: root.shuffleActive ? "#f0f0f0" : (root.shuffleSupported ? "#232323" : "#111111")
                     opacity: root.shuffleSupported ? 1 : 0.35
 
-                    Text {
+                    MIcon {
                         anchors.centerIn: parent
-                        text: "SHF"
+                        name: "shuffle"
+                        size: 14
                         color: root.shuffleActive ? "#ffffff" : root.primaryText
-                        font.family: root.fontFamily
-                        font.pixelSize: 8
-                        font.weight: Font.Black
                     }
 
                     MouseArea {
@@ -567,13 +570,11 @@ Item {
                     border.color: root.canGoPrevious ? "#232323" : "#111111"
                     opacity: root.canGoPrevious ? 1 : 0.35
 
-                    Text {
+                    MIcon {
                         anchors.centerIn: parent
-                        text: "<<"
+                        name: "skip_previous"
+                        size: 16
                         color: root.primaryText
-                        font.family: root.fontFamily
-                        font.pixelSize: 10
-                        font.weight: Font.DemiBold
                     }
 
                     MouseArea {
@@ -596,13 +597,12 @@ Item {
                     border.color: root.canTogglePlaying ? "#2b2b2b" : "#111111"
                     opacity: root.canTogglePlaying ? 1 : 0.35
 
-                    Text {
+                    MIcon {
                         anchors.centerIn: parent
-                        text: root.playing ? "||" : ">"
+                        name: root.playing ? "pause" : "play_arrow"
+                        size: 18
                         color: root.primaryText
-                        font.family: root.fontFamily
-                        font.pixelSize: root.playing ? 11 : 13
-                        font.weight: Font.Black
+                        filled: true
                     }
 
                     MouseArea {
@@ -625,13 +625,11 @@ Item {
                     border.color: root.canGoNext ? "#232323" : "#111111"
                     opacity: root.canGoNext ? 1 : 0.35
 
-                    Text {
+                    MIcon {
                         anchors.centerIn: parent
-                        text: ">>"
+                        name: "skip_next"
+                        size: 16
                         color: root.primaryText
-                        font.family: root.fontFamily
-                        font.pixelSize: 10
-                        font.weight: Font.DemiBold
                     }
 
                     MouseArea {
@@ -654,13 +652,11 @@ Item {
                     border.color: root.loopActive ? "#f0f0f0" : (root.loopSupported ? "#232323" : "#111111")
                     opacity: root.loopSupported ? 1 : 0.35
 
-                    Text {
+                    MIcon {
                         anchors.centerIn: parent
-                        text: root.loopStateText
+                        name: root.loopStateText === "ONE" ? "repeat_one" : "repeat"
+                        size: 14
                         color: root.loopActive ? "#ffffff" : root.primaryText
-                        font.family: root.fontFamily
-                        font.pixelSize: root.loopStateText.length > 2 ? 8 : 9
-                        font.weight: Font.Black
                     }
 
                     MouseArea {
@@ -671,6 +667,32 @@ Item {
                         hoverEnabled: true
                         cursorShape: root.loopSupported ? Qt.PointingHandCursor : Qt.ArrowCursor
                         onClicked: root.loopRequested()
+                    }
+                }
+
+                Rectangle {
+                    Layout.preferredWidth: 24
+                    Layout.preferredHeight: 24
+                    radius: 10
+                    color: favoriteMouse.containsMouse ? "#151515" : "#090909"
+                    border.width: 1
+                    border.color: "#232323"
+
+                    MIcon {
+                        anchors.centerIn: parent
+                        name: "favorite"
+                        size: 14
+                        color: root.primaryText
+                        filled: false
+                    }
+
+                    MouseArea {
+                        id: favoriteMouse
+
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.favoriteRequested()
                     }
                 }
             }

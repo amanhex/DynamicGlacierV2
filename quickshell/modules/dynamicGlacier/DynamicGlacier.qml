@@ -41,8 +41,11 @@ Scope {
     property bool lastBatteryPluggedIn: false
     property int lastBrightnessLevel: -1
     property int demoStep: 0
+    property bool trayBatteryDismissed: false
+    property bool trayMediaDismissed: false
 
     readonly property bool interactionOpen: root.mode === "idle" && (root.pointerInside || root.pinnedOpen)
+    readonly property bool trayVisible: root.handleStyle === "bump" && !root.interactionOpen && root.visualMode === "idle"
     readonly property bool hoverMediaMode: root.liveLinksEnabled && root.mode === "idle" && root.interactionOpen && root.hasActiveMedia()
     readonly property string visualMode: root.hoverMediaMode ? "media" : root.mode
     readonly property int idleTopMargin: 0
@@ -324,6 +327,11 @@ Scope {
         }
     }
 
+    function mediaToggleFavorite() {
+        // MPRIS does not expose a standard "favorite" method.
+        // Placeholder for future player-specific integration (e.g. Spotify DBus).
+    }
+
     function maybeShowMediaFromPlayer(preferredPlayer, force) {
         if (!root.liveLinksEnabled)
             return;
@@ -347,6 +355,7 @@ Scope {
 
         if (force || key !== root.lastTrackKey) {
             root.lastTrackKey = key;
+            root.trayMediaDismissed = false;
             if (keepMediaFieldsFresh)
                 root.syncMediaFields(player);
         }
@@ -417,8 +426,11 @@ Scope {
         if (parts.length < 2)
             return;
 
-        root.polledMicrophoneActive = parts[0] === "1";
-        root.polledCameraActive = parts[1] === "1";
+        const newMic = parts[0] === "1";
+        const newCam = parts[1] === "1";
+
+        root.polledMicrophoneActive = newMic;
+        root.polledCameraActive = newCam;
     }
 
     function updatePolledBrightness(text) {
@@ -517,13 +529,11 @@ Scope {
         }
 
         if (forceStateEvent && nextPluggedIn !== root.lastBatteryPluggedIn) {
-            root.showNotification(nextPluggedIn ? "Charging" : "On battery", nextLevel + "%", "Battery");
+            root.trayBatteryDismissed = false;
         } else if (!nextPluggedIn && root.lastBatteryLevel > 20 && nextLevel <= 20) {
             root.showNotification("Low battery", nextLevel + "% remaining", "Battery");
         } else if (!nextPluggedIn && root.lastBatteryLevel > 10 && nextLevel <= 10) {
             root.showNotification("Critical battery", nextLevel + "% remaining", "Battery");
-        } else if (nextPluggedIn && root.lastBatteryLevel < 95 && nextLevel >= 95) {
-            root.showNotification("Battery almost full", nextLevel + "%", "Battery");
         }
 
         root.lastBatteryLevel = nextLevel;
@@ -744,14 +754,19 @@ Scope {
 
                 readonly property real maskPadding: 8
                 readonly property bool privacyVisible: root.privacyActive && !root.interactionOpen
+                readonly property bool trayLeftVisible: trayLeft.visible && trayLeft.opacity > 0
+                readonly property bool trayRightVisible: trayRight.visible && trayRight.opacity > 0
                 readonly property real islandRightEdge: island.x + island.width
                 readonly property real islandBottomEdge: island.y + island.height
                 readonly property real privacyRightEdge: privacyVisible ? privacyIndicators.x + privacyIndicators.width : islandRightEdge
                 readonly property real privacyBottomEdge: privacyVisible ? privacyIndicators.y + privacyIndicators.height : islandBottomEdge
-                readonly property real rightEdge: Math.max(islandRightEdge, privacyRightEdge)
+                readonly property real trayLeftEdge: trayLeftVisible ? trayLeft.x : island.x
+                readonly property real trayRightEdge: trayRightVisible ? trayRight.x + trayRight.width : islandRightEdge
+                readonly property real leftEdge: Math.min(island.x, trayLeftEdge, privacyVisible ? privacyIndicators.x : island.x)
+                readonly property real rightEdge: Math.max(islandRightEdge, privacyRightEdge, trayRightEdge)
                 readonly property real bottomEdge: Math.max(islandBottomEdge, privacyBottomEdge)
 
-                x: Math.max(0, Math.min(island.x, privacyVisible ? privacyIndicators.x : island.x) - maskPadding)
+                x: Math.max(0, leftEdge - maskPadding)
                 y: Math.max(0, island.y - maskPadding)
                 width: Math.min(parent.width - x, rightEdge - x + maskPadding)
                 height: Math.min(parent.height - y, bottomEdge - y + maskPadding)
@@ -790,6 +805,8 @@ Scope {
                 mediaAvailable: root.mediaAvailable
                 fontFamily: root.fontFamily
                 batteryHoverText: root.batteryHoverText
+                batteryCharging: root.batteryPluggedIn()
+                batteryLevel: root.batteryLevel()
                 timeText: root.hoverTimeText
                 dateText: root.hoverDateText
                 onPreviousRequested: root.mediaPrevious()
@@ -797,8 +814,58 @@ Scope {
                 onNextRequested: root.mediaNext()
                 onShuffleRequested: root.mediaToggleShuffle()
                 onLoopRequested: root.mediaCycleLoop()
+                onFavoriteRequested: root.mediaToggleFavorite()
                 onSeekRequested: position => root.mediaSeek(position)
                 onHandleStyleRequested: style => root.setHandleStyle(style)
+            }
+
+            // Tray: left side (battery — only when charging, circular)
+            Row {
+                id: trayLeft
+
+                z: 30
+                x: island.x - width - 8
+                y: island.y + Math.max(0, (island.height - height) / 2)
+                spacing: 6
+                opacity: root.trayVisible ? 1 : 0
+                visible: opacity > 0
+
+                TrayIndicator {
+                    icon: "bolt"
+                    iconSize: 11
+                    iconColor: "#4ade80"
+                    circular: true
+                    active: root.trayVisible && root.batteryAvailable() && root.batteryPluggedIn()
+                    dismissed: root.trayBatteryDismissed
+                    onClicked: root.trayBatteryDismissed = true
+                }
+
+                Behavior on opacity {
+                    NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+                }
+            }
+
+            // Tray: right side (audio activity)
+            Row {
+                id: trayRight
+
+                z: 30
+                x: island.x + island.width + 8
+                y: island.y + Math.max(0, (island.height - height) / 2)
+                spacing: 6
+                opacity: root.trayVisible ? 1 : 0
+                visible: opacity > 0
+
+                AudioIndicator {
+                    active: root.trayVisible && root.mediaAvailable
+                    playing: root.playing
+                    dismissed: root.trayMediaDismissed
+                    onClicked: root.trayMediaDismissed = true
+                }
+
+                Behavior on opacity {
+                    NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+                }
             }
 
             Item {
@@ -809,9 +876,10 @@ Scope {
                 readonly property int dotSpacing: root.compactPrivacyIndicators ? 3 : 5
                 readonly property int haloSize: root.compactPrivacyIndicators ? 0 : 16
                 readonly property int islandGap: root.compactPrivacyIndicators ? 4 : 8
+                readonly property real anchorX: trayRight.visible && trayRight.opacity > 0 ? trayRight.x + trayRight.width + privacyIndicators.islandGap : island.x + island.width + privacyIndicators.islandGap
 
                 z: 35
-                x: island.x + island.width + privacyIndicators.islandGap
+                x: privacyIndicators.anchorX
                 y: island.y + Math.max(0, island.height / 2 - height / 2)
                 width: (root.microphoneActive ? privacyIndicators.itemSize : 0) + (root.cameraActive ? privacyIndicators.itemSize : 0) + (root.microphoneActive && root.cameraActive ? privacyIndicators.dotSpacing : 0)
                 height: privacyIndicators.itemSize
