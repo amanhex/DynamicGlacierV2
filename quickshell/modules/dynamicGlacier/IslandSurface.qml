@@ -32,6 +32,13 @@ Item {
     property string batteryHoverText: ""
     property bool batteryCharging: false
     property int batteryLevel: 0
+    property bool wifiConnected: false
+    property string wifiSsid: ""
+    property int wifiSignal: 0
+    property bool btEnabled: false
+    property bool btConnected: false
+    property string btDeviceName: ""
+    property int btBattery: -1
     property string timeText: ""
     property string dateText: ""
     property string fontFamily: "Noto Sans"
@@ -46,6 +53,9 @@ Item {
     signal shuffleRequested
     signal loopRequested
     signal favoriteRequested
+    signal dismissRequested
+    signal wifiSettingsRequested
+    signal btSettingsRequested
     signal seekRequested(real position)
     signal handleStyleRequested(string style)
 
@@ -419,6 +429,13 @@ Item {
             batteryHoverText: root.batteryHoverText
             batteryCharging: root.batteryCharging
             batteryLevel: root.batteryLevel
+            wifiConnected: root.wifiConnected
+            wifiSsid: root.wifiSsid
+            wifiSignal: root.wifiSignal
+            btEnabled: root.btEnabled
+            btConnected: root.btConnected
+            btDeviceName: root.btDeviceName
+            btBattery: root.btBattery
             timeText: root.timeText
             dateText: root.dateText
             onPreviousRequested: root.previousRequested()
@@ -427,6 +444,9 @@ Item {
             onShuffleRequested: root.shuffleRequested()
             onLoopRequested: root.loopRequested()
             onFavoriteRequested: root.favoriteRequested()
+            onDismissRequested: root.dismissRequested()
+            onWifiSettingsRequested: root.wifiSettingsRequested()
+            onBtSettingsRequested: root.btSettingsRequested()
             onSeekRequested: position => root.seekRequested(position)
             onHandleStyleRequested: style => root.handleStyleRequested(style)
         }
