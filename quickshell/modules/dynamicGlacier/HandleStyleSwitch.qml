@@ -19,43 +19,42 @@ RowLayout {
     Layout.preferredHeight: root.compact ? 15 : 17
     spacing: root.compact ? 7 : 8
 
-    Text {
-        text: "bump"
-        color: root.handleStyle === "bump" ? "#d9d9d9" : "#555555"
-        font.family: root.fontFamily
-        font.pixelSize: root.compact ? 10 : 11
-        font.weight: root.handleStyle === "bump" ? Font.DemiBold : Font.Medium
+    // Minimalist pill toggle
+    Rectangle {
+        id: toggle
 
-        MouseArea {
-            anchors.fill: parent
-            anchors.margins: -5
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: root.handleStyleRequested("bump")
+        Layout.preferredWidth: root.compact ? 20 : 24
+        Layout.preferredHeight: root.compact ? 10 : 12
+        radius: height / 2
+        color: "#151515"
+        border.width: 1
+        border.color: "#2a2a2a"
+
+        Rectangle {
+            id: dot
+
+            width: parent.height - 4
+            height: width
+            radius: width / 2
+            color: root.handleStyle === "bump" ? "#d9d9d9" : "#777777"
+            y: 2
+            x: root.handleStyle === "bump" ? 2 : parent.width - width - 2
+
+            Behavior on x {
+                NumberAnimation { duration: 180; easing.type: Easing.OutCubic }
+            }
+
+            Behavior on color {
+                ColorAnimation { duration: 180 }
+            }
         }
-    }
-
-    Text {
-        text: "/"
-        color: "#303030"
-        font.family: root.fontFamily
-        font.pixelSize: root.compact ? 10 : 11
-        font.weight: Font.DemiBold
-    }
-
-    Text {
-        text: "strip"
-        color: root.handleStyle === "strip" ? "#d9d9d9" : "#555555"
-        font.family: root.fontFamily
-        font.pixelSize: root.compact ? 10 : 11
-        font.weight: root.handleStyle === "strip" ? Font.DemiBold : Font.Medium
 
         MouseArea {
             anchors.fill: parent
-            anchors.margins: -5
+            anchors.margins: -4
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: root.handleStyleRequested("strip")
+            onClicked: root.handleStyleRequested(root.handleStyle === "bump" ? "strip" : "bump")
         }
     }
 

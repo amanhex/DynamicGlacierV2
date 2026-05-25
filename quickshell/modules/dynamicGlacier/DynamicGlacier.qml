@@ -24,6 +24,7 @@ Scope {
     property bool demoRunning: false
     property bool pointerInside: false
     property bool pinnedOpen: false
+    property bool mediaHoverSuppressed: false
     property bool liveLinksEnabled: true
     property bool liveLinksPrimed: false
     property bool privacyDebugEnabled: false
@@ -46,7 +47,7 @@ Scope {
 
     readonly property bool interactionOpen: root.mode === "idle" && (root.pointerInside || root.pinnedOpen)
     readonly property bool trayVisible: root.handleStyle === "bump" && !root.interactionOpen && root.visualMode === "idle"
-    readonly property bool hoverMediaMode: root.liveLinksEnabled && root.mode === "idle" && root.interactionOpen && root.hasActiveMedia()
+    readonly property bool hoverMediaMode: root.liveLinksEnabled && root.mode === "idle" && root.interactionOpen && !root.mediaHoverSuppressed && root.hasActiveMedia()
     readonly property string visualMode: root.hoverMediaMode ? "media" : root.mode
     readonly property int idleTopMargin: 0
     readonly property int expandedTopMargin: 0
@@ -57,10 +58,10 @@ Scope {
     readonly property int stripWidth: 98
     readonly property int stripHeight: 4
     readonly property int peekWidth: 340
-    readonly property int peekHeight: 120
+    readonly property int peekHeight: 132
     readonly property int notifyWidth: 438
     readonly property int notifyHeight: 74
-    readonly property int mediaWidth: 420
+    readonly property int mediaWidth: 380
     readonly property int mediaHeight: 132
     readonly property string fontFamily: "Noto Sans"
     readonly property var audioSink: Pipewire.defaultAudioSink
@@ -86,6 +87,17 @@ Scope {
     readonly property string hoverDateText: root.formatClockDate(root.currentDateTime)
     readonly property bool mediaAvailable: root.liveLinksEnabled && root.hasActiveMedia()
     readonly property bool mediaCanSeek: (root.activePlayer?.canSeek ?? false) && (root.activePlayer?.positionSupported ?? false) && root.mediaLength > 0
+
+    // WiFi
+    property string wifiSsid: ""
+    property int wifiSignal: 0
+    readonly property bool wifiConnected: root.wifiSsid !== ""
+
+    // Bluetooth
+    property string btDeviceName: ""
+    property int btBattery: -1
+    readonly property bool btEnabled: true
+    readonly property bool btConnected: root.btDeviceName !== ""
 
     function targetWidth() {
         switch (root.visualMode) {
@@ -530,10 +542,6 @@ Scope {
 
         if (forceStateEvent && nextPluggedIn !== root.lastBatteryPluggedIn) {
             root.trayBatteryDismissed = false;
-        } else if (!nextPluggedIn && root.lastBatteryLevel > 20 && nextLevel <= 20) {
-            root.showNotification("Low battery", nextLevel + "% remaining", "Battery");
-        } else if (!nextPluggedIn && root.lastBatteryLevel > 10 && nextLevel <= 10) {
-            root.showNotification("Critical battery", nextLevel + "% remaining", "Battery");
         }
 
         root.lastBatteryLevel = nextLevel;
@@ -676,6 +684,51 @@ Scope {
         }
     }
 
+    Process {
+        id: wifiSettingsProc
+    }
+
+    Process {
+        id: btSettingsProc
+    }
+
+    Process {
+        id: wifiPollProc
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const parts = text.trim().split("\t");
+                root.wifiSsid = parts[0] === "" || parts[0] === "--" ? "" : parts[0];
+                root.wifiSignal = parts.length > 1 ? parseInt(parts[1]) || 0 : 0;
+            }
+        }
+    }
+
+    Process {
+        id: btPollProc
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const parts = text.trim().split("\t");
+                root.btDeviceName = parts[0] || "";
+                root.btBattery = parts.length > 1 ? parseInt(parts[1]) || -1 : -1;
+            }
+        }
+    }
+
+    Timer {
+        interval: 3000
+        repeat: true
+        running: root.liveLinksEnabled
+        triggeredOnStart: true
+        onTriggered: {
+            if (!wifiPollProc.running)
+                wifiPollProc.exec(["sh", "-c", "nmcli -t -f active,ssid,signal dev wifi 2>/dev/null | grep '^yes:' | head -1 | awk -F: '{printf \"%s\\t%s\\n\", $2, $3}'"]);
+            if (!btPollProc.running)
+                btPollProc.exec(["sh", "-c", "dev=$(bluetoothctl devices Connected 2>/dev/null | head -1 | cut -d' ' -f3-); [ -z \"$dev\" ] && printf '\\t\\n' && exit 0; bat=$(bluetoothctl info 2>/dev/null | sed -n 's/.*Battery Percentage: 0x[0-9a-f]* (\\([0-9]*\\)).*/\\1/p'); printf '%s\\t%s\\n' \"$dev\" \"$bat\""]);
+        }
+    }
+
     PwObjectTracker {
         objects: [root.audioSink]
     }
@@ -687,7 +740,10 @@ Scope {
             required property MprisPlayer modelData
             target: modelData
 
-            Component.onCompleted: root.maybeShowMediaFromPlayer(modelData, false)
+            Component.onCompleted: {
+                root.trayMediaDismissed = false;
+                root.maybeShowMediaFromPlayer(modelData, false);
+            }
 
             function onPlaybackStateChanged() {
                 root.maybeShowMediaFromPlayer(modelData, false);
@@ -721,6 +777,11 @@ Scope {
         function onStateChanged() {
             root.maybeShowBattery(true);
         }
+    }
+
+    onMediaAvailableChanged: {
+        if (root.mediaAvailable)
+            root.trayMediaDismissed = false;
     }
 
     PanelWindow {
@@ -807,6 +868,13 @@ Scope {
                 batteryHoverText: root.batteryHoverText
                 batteryCharging: root.batteryPluggedIn()
                 batteryLevel: root.batteryLevel()
+                wifiConnected: root.wifiConnected
+                wifiSsid: root.wifiSsid
+                wifiSignal: root.wifiSignal
+                btEnabled: root.btEnabled
+                btConnected: root.btConnected
+                btDeviceName: root.btDeviceName
+                btBattery: root.btBattery
                 timeText: root.hoverTimeText
                 dateText: root.hoverDateText
                 onPreviousRequested: root.mediaPrevious()
@@ -815,6 +883,12 @@ Scope {
                 onShuffleRequested: root.mediaToggleShuffle()
                 onLoopRequested: root.mediaCycleLoop()
                 onFavoriteRequested: root.mediaToggleFavorite()
+                onDismissRequested: {
+                    root.mediaHoverSuppressed = true;
+                    root.showIdle();
+                }
+                onWifiSettingsRequested: wifiSettingsProc.exec(["sh", "-c", "kitty --title 'WiFi Settings' nmtui-connect &"])
+                onBtSettingsRequested: btSettingsProc.exec(["sh", "-c", "bluedevil-wizard &"])
                 onSeekRequested: position => root.mediaSeek(position)
                 onHandleStyleRequested: style => root.setHandleStyle(style)
             }
@@ -841,11 +915,14 @@ Scope {
                 }
 
                 Behavior on opacity {
-                    NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+                    NumberAnimation {
+                        duration: 200
+                        easing.type: Easing.OutCubic
+                    }
                 }
             }
 
-            // Tray: right side (audio activity)
+            // Tray: right side (audio activity, notifications)
             Row {
                 id: trayRight
 
@@ -864,7 +941,10 @@ Scope {
                 }
 
                 Behavior on opacity {
-                    NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+                    NumberAnimation {
+                        duration: 200
+                        easing.type: Easing.OutCubic
+                    }
                 }
             }
 
@@ -964,7 +1044,10 @@ Scope {
                 acceptedButtons: root.visualMode === "media" || root.interactionOpen ? Qt.NoButton : Qt.LeftButton
                 cursorShape: Qt.PointingHandCursor
                 onEntered: root.keepInteractionOpen(true)
-                onExited: root.scheduleInteractionClose()
+                onExited: {
+                    root.mediaHoverSuppressed = false;
+                    root.scheduleInteractionClose();
+                }
                 onClicked: {
                     if (root.mode === "idle")
                         root.pinnedOpen = !root.pinnedOpen;

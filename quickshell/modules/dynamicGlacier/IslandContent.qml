@@ -31,6 +31,13 @@ Item {
     property string batteryHoverText: ""
     property bool batteryCharging: false
     property int batteryLevel: 0
+    property bool wifiConnected: false
+    property string wifiSsid: ""
+    property int wifiSignal: 0
+    property bool btEnabled: false
+    property bool btConnected: false
+    property string btDeviceName: ""
+    property int btBattery: -1
     property string timeText: ""
     property string dateText: ""
     property string fontFamily: "Noto Sans"
@@ -48,6 +55,9 @@ Item {
     signal shuffleRequested
     signal loopRequested
     signal favoriteRequested
+    signal dismissRequested
+    signal wifiSettingsRequested
+    signal btSettingsRequested
     signal seekRequested(real position)
     signal handleStyleRequested(string style)
 
@@ -234,7 +244,7 @@ Item {
             RowLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                spacing: 0
+                spacing: 12
 
                 ColumnLayout {
                     Layout.fillWidth: true
@@ -258,6 +268,84 @@ Item {
                         font.family: root.fontFamily
                         font.pixelSize: 13
                         font.weight: Font.DemiBold
+                    }
+                }
+
+                ColumnLayout {
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    spacing: 5
+
+                    // WiFi
+                    Item {
+                        Layout.alignment: Qt.AlignRight
+                        Layout.preferredWidth: wifiRow.width
+                        Layout.preferredHeight: wifiRow.height
+
+                        Row {
+                            id: wifiRow
+                            spacing: 4
+
+                            MIcon {
+                                name: root.wifiConnected ? (root.wifiSignal >= 70 ? "wifi" : root.wifiSignal >= 40 ? "wifi_2_bar" : "wifi_1_bar") : "wifi_off"
+                                size: 13
+                                color: root.wifiConnected ? "#f0f0f0" : "#555555"
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            Text {
+                                text: root.wifiConnected ? root.wifiSsid : "Off"
+                                color: root.wifiConnected ? "#c8c8c8" : "#555555"
+                                font.family: root.fontFamily
+                                font.pixelSize: 11
+                                font.weight: Font.DemiBold
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            anchors.margins: -4
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.wifiSettingsRequested()
+                        }
+                    }
+
+                    // Bluetooth
+                    Item {
+                        Layout.alignment: Qt.AlignRight
+                        Layout.preferredWidth: btRow.width
+                        Layout.preferredHeight: btRow.height
+
+                        Row {
+                            id: btRow
+                            spacing: 4
+
+                            MIcon {
+                                name: "bluetooth"
+                                size: 13
+                                color: root.btConnected ? "#5b9bf8" : (root.btEnabled ? "#f0f0f0" : "#555555")
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            Text {
+                                text: root.btConnected ? (root.btBattery >= 0 ? root.btDeviceName + " " + root.btBattery + "%" : root.btDeviceName) : (root.btEnabled ? "On" : "Off")
+                                color: root.btConnected ? "#c8c8c8" : "#555555"
+                                font.family: root.fontFamily
+                                font.pixelSize: 11
+                                font.weight: Font.DemiBold
+                                elide: Text.ElideRight
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            anchors.margins: -4
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.btSettingsRequested()
+                        }
                     }
                 }
             }
@@ -453,6 +541,31 @@ Item {
                     font.family: root.fontFamily
                     font.pixelSize: 15
                     font.weight: Font.Bold
+                }
+
+                Rectangle {
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    radius: 10
+                    color: dismissMouse.containsMouse ? "#1a1a1a" : "#0a0a0a"
+                    border.width: 1
+                    border.color: "#232323"
+
+                    MIcon {
+                        anchors.centerIn: parent
+                        name: "close"
+                        size: 12
+                        color: "#999999"
+                    }
+
+                    MouseArea {
+                        id: dismissMouse
+
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.dismissRequested()
+                    }
                 }
             }
 

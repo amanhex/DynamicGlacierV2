@@ -25,7 +25,7 @@ Item {
     Rectangle {
         id: chip
 
-        width: 22
+        width: 18
         height: 18
         radius: height / 2
         color: chipMouse.containsMouse ? "#0f0f0f" : root.backgroundColor
@@ -34,16 +34,16 @@ Item {
 
         Row {
             anchors.centerIn: parent
-            spacing: 1.5
+            spacing: 1
 
             Repeater {
-                model: 4
+                model: 3
 
                 Rectangle {
                     id: bar
 
                     width: 2
-                    height: root.animating ? (4 + index * 2) : 4
+                    height: root.animating ? (4 + index * 2) : 3
                     radius: 1
                     color: root.barColor
                     anchors.verticalCenter: parent.verticalCenter
@@ -59,7 +59,7 @@ Item {
                         }
 
                         NumberAnimation {
-                            to: 9 - (index % 2) * 3
+                            to: 8 - (index % 2) * 3
                             duration: 280 + index * 50
                             easing.type: Easing.InOutSine
                         }
