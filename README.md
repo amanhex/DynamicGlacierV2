@@ -98,11 +98,10 @@ bash uninstall.sh --yes
 <details open>
 <summary><b>Screenshots</b></summary>
 
-<img width="1918" height="1198" alt="privacy" src="https://github.com/user-attachments/assets/fcf5b5ba-191a-44bc-99b0-56d352f4ddce" />
-<img width="1918" height="1198" alt="playerHover" src="https://github.com/user-attachments/assets/e310a109-2ee7-45ce-8a28-3c1b6b02524a" />
-<img width="1918" height="1198" alt="player" src="https://github.com/user-attachments/assets/551736ff-dfba-46b5-952a-58a7ce3fc64c" />
-<img width="1918" height="1198" alt="idleHover" src="https://github.com/user-attachments/assets/815159de-281e-4252-920a-d6d6bd41be0e" />
-<img width="1918" height="1198" alt="idle" src="https://github.com/user-attachments/assets/950bb078-0058-49fd-896d-9f01fe634323" />
+![idle](public/DynamicGlacier.png)
+![player](public/DynamicGlacier2.png)
+![playerHover](public/DynamicGlacier3.png)
+![privacy](public/DynamicGlacier4.png)
 
 </details>
 
@@ -113,17 +112,62 @@ bash uninstall.sh --yes
 
 - Pure-black top-center island for Hyprland.
 - OLED-friendly idle handle with `bump` and barely visible `strip` modes.
+- Anti-corner notch smoothly merging island into screen edge.
 - Hover expansion that can overlap windows instead of constantly resizing the Hyprland layout.
 - Small constant reserved zone, so normal windows do not jump around.
 - Focused-monitor placement through Hyprland.
-- MPRIS media player with artwork, title, artist, position, timeline, seek, previous, play/pause, next, shuffle, and repeat controls.
+- MPRIS media player with artwork, title, artist, position, timeline, seek, previous, play/pause, next, shuffle, repeat, and favorite controls (Material Symbols icons).
 - Paused tracks stay in the media state instead of immediately collapsing to idle.
 - Collapsed `bump` can show current time plus track artwork/play indicator when media is active.
+- Tray indicators: circular battery charging chip, cava-style audio bars.
 - Subtle open U-shaped trace for volume and brightness changes.
-- Battery text on hover through UPower.
+- WiFi status (signal strength + SSID) and Bluetooth (device name + battery %) in idle mode.
+- Click WiFi/BT to open settings (nmtui / bluedevil-wizard).
+- Battery icon + percentage on hover through UPower.
 - Microphone and camera privacy dots with separate colors and non-overlapping layout.
 - PipeWire privacy detection plus local fallbacks for `pactl` microphone streams and `/dev/video*` camera users.
+- Minimalist pill toggle for bump/strip mode switching.
 - IPC commands for manual testing and integration scripts.
+
+</details>
+
+<details>
+<summary><b>Customization</b></summary>
+
+All customizable properties live in `quickshell/modules/dynamicGlacier/DynamicGlacier.qml`. You can change these without breaking anything:
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `handleStyle` | `"bump"` | Idle handle mode: `"bump"` (pill) or `"strip"` (thin line) |
+| `liveLinksEnabled` | `true` | Enable live MPRIS, volume, brightness, privacy detection |
+| `fontFamily` | `"Noto Sans"` | Font used across the widget |
+| `bumpWidth` | `104` | Width of the idle bump handle (px) |
+| `bumpHeight` | `24` | Height of the idle bump handle (px) |
+| `stripWidth` | `98` | Width of the idle strip handle (px) |
+| `stripHeight` | `4` | Height of the idle strip handle (px) |
+| `peekWidth` | `340` | Width when hovering idle (expanded peek) |
+| `peekHeight` | `132` | Height when hovering idle |
+| `notifyWidth` | `438` | Width of notification state |
+| `notifyHeight` | `74` | Height of notification state |
+| `mediaWidth` | `380` | Width of media player state |
+| `mediaHeight` | `132` | Height of media player state |
+| `reservedZone` | `24` (bump) / `0` (strip) | Top exclusive zone reserved for the island |
+| `windowHeight` | `136` | Total window height for the layer surface |
+
+Colors are defined inline in `IslandSurface.qml` and `IslandContent.qml`:
+
+- `surfaceColor`: island background (`#000000` bump, `#0c0c0c` strip)
+- `primaryText`: main text color (`#f7f7f7`)
+- `secondaryText`: dimmed text (`#7f7f7f`)
+- `microphoneIndicatorColor`: mic privacy dot (`#ff9f1a`)
+- `cameraIndicatorColor`: camera privacy dot (`#35ff72`)
+
+To change the WiFi/BT settings apps, edit these lines in `DynamicGlacier.qml`:
+
+```qml
+onWifiSettingsRequested: wifiSettingsProc.exec(["sh", "-c", "kitty --title 'WiFi Settings' nmtui-connect &"])
+onBtSettingsRequested: btSettingsProc.exec(["sh", "-c", "bluedevil-wizard &"])
+```
 
 </details>
 
@@ -134,7 +178,7 @@ bash uninstall.sh --yes
 - User config file for sizes, colors, modules, and timeout behavior.
 - More detailed privacy labels for active microphone/camera clients.
 - Long-running progress state for commands, downloads, and file operations.
-- Bluetooth, VPN/network, DND, timer, and calendar activity states.
+- VPN/network, DND, timer, and calendar activity states.
 - Optional tighter integration with end-4 dots while keeping standalone usage clean.
 
 </details>
