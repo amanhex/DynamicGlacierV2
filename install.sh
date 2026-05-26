@@ -120,24 +120,9 @@ strip_managed_autostart_block() {
 
 ensure_hyprland_autostart() {
     local temp_file
-    local end4_execs="$XDG_CONFIG_HOME/hypr/custom/execs.conf"
 
     if [ "$AUTOSTART_ENABLED" -eq 0 ]; then
         log "Skipping Hyprland autostart registration"
-        return
-    fi
-
-    # Prefer end-4 custom/execs.conf if it exists
-    if [ -f "$end4_execs" ]; then
-        if grep -Fq "dynamic-glacier" "$end4_execs"; then
-            AUTOSTART_REGISTERED=1
-            log "Hyprland autostart already in $end4_execs"
-            return
-        fi
-
-        printf '%s\n' "$AUTOSTART_LINE" >> "$end4_execs"
-        AUTOSTART_REGISTERED=1
-        log "Registered Hyprland autostart in $end4_execs (end-4 layout)"
         return
     fi
 
