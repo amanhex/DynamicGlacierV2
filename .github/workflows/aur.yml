@@ -1,0 +1,28 @@
+name: Update AUR
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "aur/PKGBUILD"
+      - "aur/dynamic-glacier.install"
+
+jobs:
+  aur-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Publish to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v3.0.1
+        with:
+          pkgname: dynamic-glacier-git
+          pkgbuild: ./aur/PKGBUILD
+          assets: |
+            ./aur/dynamic-glacier.install
+          commit_username: mavxa
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_KEY }}
+          commit_message: "update: ${{ github.sha }}"

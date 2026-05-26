@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Shapes
 
 Item {
     id: root
@@ -29,22 +30,118 @@ Item {
     property bool mediaAvailable: false
     property string handleStyle: "bump"
     property string batteryHoverText: ""
+    property bool batteryCharging: false
+    property int batteryLevel: 0
+    property bool wifiConnected: false
+    property string wifiSsid: ""
+    property int wifiSignal: 0
+    property bool btEnabled: false
+    property bool btConnected: false
+    property string btDeviceName: ""
+    property int btBattery: -1
     property string timeText: ""
     property string dateText: ""
     property string fontFamily: "Noto Sans"
     readonly property bool expanded: mode !== "idle" || forceExpanded
     readonly property real bottomRadius: Math.max(1, Math.min(height / 2, expanded ? Math.min(height * 0.28, 24) : Math.min(height * 0.42, 8)))
     readonly property color surfaceColor: !expanded && handleStyle === "strip" ? "#0c0c0c" : "#000000"
+    readonly property real antiCornerRadius: root.expanded || handleStyle === "strip" ? Math.min(3, height * 0.6) : Math.min(2.5, height * 0.12)
 
     signal previousRequested
     signal playPauseRequested
     signal nextRequested
     signal shuffleRequested
     signal loopRequested
+    signal favoriteRequested
+    signal dismissRequested
+    signal wifiSettingsRequested
+    signal btSettingsRequested
     signal seekRequested(real position)
     signal handleStyleRequested(string style)
 
     transformOrigin: Item.Top
+
+    // Anti-corner left: smooth concave curve merging island into screen edge
+    Shape {
+        id: antiCornerLeft
+
+        x: -antiCornerLeft.width
+        y: 0
+        width: root.antiCornerRadius
+        height: root.antiCornerRadius * 0.65
+        opacity: root.antiCornerRadius > 0 ? 1 : 0
+        visible: opacity > 0
+        antialiasing: true
+
+        ShapePath {
+            fillColor: root.surfaceColor
+            strokeColor: "transparent"
+            startX: antiCornerLeft.width
+            startY: 0
+            PathLine {
+                x: antiCornerLeft.width
+                y: antiCornerLeft.height
+            }
+            PathCubic {
+                x: 0; y: 0
+                control1X: antiCornerLeft.width * 0.45
+                control1Y: antiCornerLeft.height
+                control2X: 0
+                control2Y: antiCornerLeft.height * 0.3
+            }
+        }
+
+        Behavior on opacity {
+            NumberAnimation { duration: 280; easing.type: Easing.OutCubic }
+        }
+        Behavior on width {
+            NumberAnimation { duration: 360; easing.type: Easing.OutCubic }
+        }
+        Behavior on height {
+            NumberAnimation { duration: 360; easing.type: Easing.OutCubic }
+        }
+    }
+
+    // Anti-corner right: smooth concave curve merging island into screen edge
+    Shape {
+        id: antiCornerRight
+
+        x: root.width
+        y: 0
+        width: root.antiCornerRadius
+        height: root.antiCornerRadius * 0.65
+        opacity: root.antiCornerRadius > 0 ? 1 : 0
+        visible: opacity > 0
+        antialiasing: true
+
+        ShapePath {
+            fillColor: root.surfaceColor
+            strokeColor: "transparent"
+            startX: 0
+            startY: 0
+            PathLine {
+                x: 0
+                y: antiCornerRight.height
+            }
+            PathCubic {
+                x: antiCornerRight.width; y: 0
+                control1X: antiCornerRight.width * 0.55
+                control1Y: antiCornerRight.height
+                control2X: antiCornerRight.width
+                control2Y: antiCornerRight.height * 0.3
+            }
+        }
+
+        Behavior on opacity {
+            NumberAnimation { duration: 280; easing.type: Easing.OutCubic }
+        }
+        Behavior on width {
+            NumberAnimation { duration: 360; easing.type: Easing.OutCubic }
+        }
+        Behavior on height {
+            NumberAnimation { duration: 360; easing.type: Easing.OutCubic }
+        }
+    }
 
     Rectangle {
         id: shadow
@@ -330,6 +427,15 @@ Item {
             mediaAvailable: root.mediaAvailable
             fontFamily: root.fontFamily
             batteryHoverText: root.batteryHoverText
+            batteryCharging: root.batteryCharging
+            batteryLevel: root.batteryLevel
+            wifiConnected: root.wifiConnected
+            wifiSsid: root.wifiSsid
+            wifiSignal: root.wifiSignal
+            btEnabled: root.btEnabled
+            btConnected: root.btConnected
+            btDeviceName: root.btDeviceName
+            btBattery: root.btBattery
             timeText: root.timeText
             dateText: root.dateText
             onPreviousRequested: root.previousRequested()
@@ -337,6 +443,10 @@ Item {
             onNextRequested: root.nextRequested()
             onShuffleRequested: root.shuffleRequested()
             onLoopRequested: root.loopRequested()
+            onFavoriteRequested: root.favoriteRequested()
+            onDismissRequested: root.dismissRequested()
+            onWifiSettingsRequested: root.wifiSettingsRequested()
+            onBtSettingsRequested: root.btSettingsRequested()
             onSeekRequested: position => root.seekRequested(position)
             onHandleStyleRequested: style => root.handleStyleRequested(style)
         }

@@ -6,6 +6,8 @@ RowLayout {
 
     property string handleStyle: "bump"
     property string batteryText: ""
+    property bool batteryCharging: false
+    property int batteryLevel: 0
     property string statusText: ""
     property string fontFamily: "Noto Sans"
     property bool showBattery: false
@@ -17,43 +19,42 @@ RowLayout {
     Layout.preferredHeight: root.compact ? 15 : 17
     spacing: root.compact ? 7 : 8
 
-    Text {
-        text: "bump"
-        color: root.handleStyle === "bump" ? "#d9d9d9" : "#555555"
-        font.family: root.fontFamily
-        font.pixelSize: root.compact ? 10 : 11
-        font.weight: root.handleStyle === "bump" ? Font.DemiBold : Font.Medium
+    // Minimalist pill toggle
+    Rectangle {
+        id: toggle
 
-        MouseArea {
-            anchors.fill: parent
-            anchors.margins: -5
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: root.handleStyleRequested("bump")
+        Layout.preferredWidth: root.compact ? 20 : 24
+        Layout.preferredHeight: root.compact ? 10 : 12
+        radius: height / 2
+        color: "#151515"
+        border.width: 1
+        border.color: "#2a2a2a"
+
+        Rectangle {
+            id: dot
+
+            width: parent.height - 4
+            height: width
+            radius: width / 2
+            color: root.handleStyle === "bump" ? "#d9d9d9" : "#777777"
+            y: 2
+            x: root.handleStyle === "bump" ? 2 : parent.width - width - 2
+
+            Behavior on x {
+                NumberAnimation { duration: 180; easing.type: Easing.OutCubic }
+            }
+
+            Behavior on color {
+                ColorAnimation { duration: 180 }
+            }
         }
-    }
-
-    Text {
-        text: "/"
-        color: "#303030"
-        font.family: root.fontFamily
-        font.pixelSize: root.compact ? 10 : 11
-        font.weight: Font.DemiBold
-    }
-
-    Text {
-        text: "strip"
-        color: root.handleStyle === "strip" ? "#d9d9d9" : "#555555"
-        font.family: root.fontFamily
-        font.pixelSize: root.compact ? 10 : 11
-        font.weight: root.handleStyle === "strip" ? Font.DemiBold : Font.Medium
 
         MouseArea {
             anchors.fill: parent
-            anchors.margins: -5
+            anchors.margins: -4
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: root.handleStyleRequested("strip")
+            onClicked: root.handleStyleRequested(root.handleStyle === "bump" ? "strip" : "bump")
         }
     }
 
@@ -75,12 +76,24 @@ RowLayout {
         }
     }
 
-    Text {
-        text: root.batteryText
-        color: "#ececec"
-        visible: root.showBattery && root.batteryText !== ""
-        font.family: root.fontFamily
-        font.pixelSize: root.compact ? 10 : 11
-        font.weight: Font.Bold
+    Row {
+        spacing: 3
+        visible: root.showBattery && root.batteryLevel > 0
+
+        MIcon {
+            name: root.batteryCharging ? "bolt" : root.batteryLevel <= 20 ? "battery_alert" : "battery_full"
+            size: root.compact ? 12 : 13
+            color: root.batteryCharging ? "#4ade80" : root.batteryLevel <= 20 ? "#f87171" : "#ececec"
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Text {
+            text: root.batteryLevel + "%"
+            color: "#ececec"
+            font.family: root.fontFamily
+            font.pixelSize: root.compact ? 10 : 11
+            font.weight: Font.Bold
+            anchors.verticalCenter: parent.verticalCenter
+        }
     }
 }
