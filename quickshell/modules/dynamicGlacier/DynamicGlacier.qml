@@ -70,7 +70,7 @@ Scope {
     readonly property int idleTopMargin: 0
     readonly property int expandedTopMargin: 0
     readonly property int reservedZone: root.handleStyle === "strip" ? 0 : 24
-    readonly property int windowHeight: 154
+    readonly property int windowHeight: 169
     readonly property int bumpWidth: 104
     readonly property int bumpHeight: 24
     readonly property int stripWidth: 98
@@ -80,7 +80,7 @@ Scope {
     readonly property int notifyWidth: 460
     readonly property int notifyHeight: 74
     readonly property int mediaWidth: 410
-    readonly property int mediaHeight: 150
+    readonly property int mediaHeight: 165
     readonly property string fontFamily: "Noto Sans"
     readonly property var audioSink: Pipewire.defaultAudioSink
     readonly property bool mediaCanGoPrevious: root.activePlayer?.canGoPrevious ?? false

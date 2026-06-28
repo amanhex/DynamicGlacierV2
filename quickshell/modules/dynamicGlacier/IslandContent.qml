@@ -52,11 +52,11 @@ Item {
     readonly property color primaryText: "#f7f7f7"
     readonly property color secondaryText: "#7f7f7f"
     readonly property color accent: "#ffffff"
-    readonly property int mediaHorizontalPadding: 28
-    readonly property int cardTopPadding: 14
-    readonly property int cardBottomPadding: 12
+    readonly property int mediaHorizontalPadding: 20
+    readonly property int cardTopPadding: 10
+    readonly property int cardBottomPadding: 8
     readonly property int cardHorizontalPadding: 20
-    readonly property int sectionSpacing: 12
+    readonly property int sectionSpacing: 8
     readonly property int rowSpacing: 8
     readonly property int controlSpacing: 10
     readonly property int artworkSize: 58
@@ -718,7 +718,6 @@ Item {
 
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
-                Layout.topMargin: 2
                 spacing: root.controlSpacing
 
                 Rectangle {
