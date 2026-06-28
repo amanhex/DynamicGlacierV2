@@ -42,6 +42,16 @@ Item {
     property string timeText: ""
     property string dateText: ""
     property string fontFamily: "Noto Sans"
+    property string currentPage: "media"
+
+    // System monitoring properties
+    property real cpuUsage: 0
+    property real ramUsage: 0
+    property string ramUsed: "0"
+    property string ramTotal: "0"
+    property real cpuTemp: 0
+    property real gpuTemp: -1
+    property real diskUsage: 0
     readonly property bool expanded: mode !== "idle" || forceExpanded
     readonly property real bottomRadius: Math.max(1, Math.min(height / 2, expanded ? Math.min(height * 0.28, 24) : Math.min(height * 0.42, 8)))
     readonly property color surfaceColor: !expanded && handleStyle === "strip" ? "#0c0c0c" : "#000000"
@@ -57,6 +67,7 @@ Item {
     signal wifiSettingsRequested
     signal btSettingsRequested
     signal seekRequested(real position)
+    signal navigateRequested
     signal handleStyleRequested(string style)
 
     transformOrigin: Item.Top
@@ -438,6 +449,14 @@ Item {
             btBattery: root.btBattery
             timeText: root.timeText
             dateText: root.dateText
+            currentPage: root.currentPage
+            cpuUsage: root.cpuUsage
+            ramUsage: root.ramUsage
+            ramUsed: root.ramUsed
+            ramTotal: root.ramTotal
+            cpuTemp: root.cpuTemp
+            gpuTemp: root.gpuTemp
+            diskUsage: root.diskUsage
             onPreviousRequested: root.previousRequested()
             onPlayPauseRequested: root.playPauseRequested()
             onNextRequested: root.nextRequested()
@@ -449,6 +468,7 @@ Item {
             onBtSettingsRequested: root.btSettingsRequested()
             onSeekRequested: position => root.seekRequested(position)
             onHandleStyleRequested: style => root.handleStyleRequested(style)
+            onNavigateRequested: root.navigateRequested()
         }
     }
 

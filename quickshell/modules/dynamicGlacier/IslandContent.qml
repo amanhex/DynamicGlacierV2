@@ -5,7 +5,7 @@ import Qt5Compat.GraphicalEffects
 Item {
     id: root
 
-    property string mode: "idle"
+    property string mode
     property string appName: ""
     property string title: ""
     property string body: ""
@@ -41,6 +41,16 @@ Item {
     property string timeText: ""
     property string dateText: ""
     property string fontFamily: "Noto Sans"
+    property string currentPage: "media"
+
+    // System monitoring properties
+    property real cpuUsage: 0
+    property real ramUsage: 0
+    property string ramUsed: "0"
+    property string ramTotal: "0"
+    property real cpuTemp: 0
+    property real gpuTemp: -1
+    property real diskUsage: 0
     readonly property color primaryText: "#f7f7f7"
     readonly property color secondaryText: "#7f7f7f"
     readonly property color accent: "#ffffff"
@@ -56,6 +66,7 @@ Item {
     signal loopRequested
     signal favoriteRequested
     signal dismissRequested
+    signal navigateRequested
     signal wifiSettingsRequested
     signal btSettingsRequested
     signal seekRequested(real position)
@@ -221,7 +232,7 @@ Item {
         id: idleContent
 
         anchors.fill: parent
-        opacity: root.mode === "idle" && root.forceExpanded ? 1 : 0
+        opacity: root.mode === "idle" && root.forceExpanded && root.currentPage === "utilities" ? 1 : 0
         visible: opacity > 0
 
         ColumnLayout {
@@ -347,6 +358,48 @@ Item {
                             onClicked: root.btSettingsRequested()
                         }
                     }
+
+                    // Navigation button (cycle pages)
+                    Item {
+                        Layout.alignment: Qt.AlignRight
+                        Layout.preferredWidth: 20
+                        Layout.preferredHeight: 20
+
+                        Rectangle {
+                            anchors.centerIn: parent
+                            width: 20
+                            height: 20
+                            radius: 10
+                            color: idleNavMouse.containsMouse ? "#1a1a1a" : "#0a0a0a"
+                            border.width: 1
+                            border.color: "#232323"
+
+                            MIcon {
+                                id: idleNavIcon
+                                anchors.centerIn: parent
+                                name: "tune"
+                                size: 12
+                                color: "#999999"
+                            }
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: idleNavIcon.text === "" ? "→" : ""
+                                color: "#999999"
+                                font.family: root.fontFamily
+                                font.pixelSize: 12
+                            }
+
+                            MouseArea {
+                                id: idleNavMouse
+
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: root.navigateRequested()
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -432,7 +485,7 @@ Item {
         anchors.leftMargin: root.mediaHorizontalPadding
         anchors.rightMargin: root.mediaHorizontalPadding
         spacing: 24
-        opacity: root.mode === "media" ? 1 : 0
+        opacity: (root.mode === "media" || (root.mode === "idle" && root.forceExpanded && root.currentPage === "media")) ? 1 : 0
         visible: opacity > 0
 
         Rectangle {
@@ -547,24 +600,35 @@ Item {
                     Layout.preferredWidth: 20
                     Layout.preferredHeight: 20
                     radius: 10
-                    color: dismissMouse.containsMouse ? "#1a1a1a" : "#0a0a0a"
+                    color: navMouse.containsMouse ? "#1a1a1a" : "#0a0a0a"
                     border.width: 1
                     border.color: "#232323"
 
+                    // Primary: Material Symbols icon (requires font)
                     MIcon {
+                        id: navIcon
                         anchors.centerIn: parent
-                        name: "close"
+                        name: root.currentPage === "media" ? "tune" : (root.currentPage === "utilities" ? "memory" : "music_note")
                         size: 12
                         color: "#999999"
                     }
 
+                    // Fallback: Unicode characters (always works)
+                    Text {
+                        anchors.centerIn: parent
+                        text: navIcon.text === "" ? (root.currentPage === "media" ? "♫" : (root.currentPage === "utilities" ? "⚙" : "♪")) : ""
+                        color: "#999999"
+                        font.family: root.fontFamily
+                        font.pixelSize: 12
+                    }
+
                     MouseArea {
-                        id: dismissMouse
+                        id: navMouse
 
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: root.dismissRequested()
+                        onClicked: root.navigateRequested()
                     }
                 }
             }
@@ -806,6 +870,283 @@ Item {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: root.favoriteRequested()
+                    }
+                }
+            }
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 210
+            }
+        }
+    }
+
+    // ── System Card (CPU, RAM, temps, disk) ──────────────────────────────────
+    Item {
+        id: systemContent
+
+        anchors.fill: parent
+        anchors.leftMargin: root.mediaHorizontalPadding
+        anchors.rightMargin: root.mediaHorizontalPadding
+        opacity: root.mode === "idle" && root.forceExpanded && root.currentPage === "system" ? 1 : 0
+        visible: opacity > 0
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 4
+
+            // Top row: HandleStyleSwitch + time + nav button (matches media card)
+            HandleStyleSwitch {
+                handleStyle: root.handleStyle
+                batteryCharging: root.batteryCharging
+                batteryLevel: root.batteryLevel
+                statusText: root.dateText
+                fontFamily: root.fontFamily
+                compact: true
+                showBattery: true
+                onHandleStyleRequested: style => root.handleStyleRequested(style)
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Text {
+                    Layout.fillWidth: true
+                    text: "System"
+                    color: root.primaryText
+                    elide: Text.ElideRight
+                    font.family: root.fontFamily
+                    font.pixelSize: 16
+                    font.weight: Font.DemiBold
+                }
+
+                Text {
+                    text: root.timeText
+                    color: "#f0f0f0"
+                    visible: root.timeText !== ""
+                    font.family: root.fontFamily
+                    font.pixelSize: 15
+                    font.weight: Font.Bold
+                }
+
+                // Navigation button
+                Rectangle {
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    radius: 10
+                    color: sysNavMouse.containsMouse ? "#1a1a1a" : "#0a0a0a"
+                    border.width: 1
+                    border.color: "#232323"
+
+                    MIcon {
+                        id: sysNavIcon
+                        anchors.centerIn: parent
+                        name: root.currentPage === "media" ? "tune" : (root.currentPage === "utilities" ? "memory" : "music_note")
+                        size: 12
+                        color: "#999999"
+                    }
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: sysNavIcon.text === "" ? "→" : ""
+                        color: "#999999"
+                        font.family: root.fontFamily
+                        font.pixelSize: 12
+                    }
+
+                    MouseArea {
+                        id: sysNavMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.navigateRequested()
+                    }
+                }
+            }
+
+            // CPU
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Text {
+                    text: "CPU"
+                    color: root.secondaryText
+                    font.family: root.fontFamily
+                    font.pixelSize: 11
+                    font.weight: Font.DemiBold
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 4
+                    radius: 2
+                    color: "#151515"
+
+                    Rectangle {
+                        width: parent.width * Math.min(1, root.cpuUsage / 100)
+                        height: parent.height
+                        radius: parent.radius
+                        color: "#d8d8d8"
+
+                        Behavior on width {
+                            NumberAnimation { duration: 400; easing.type: Easing.OutCubic }
+                        }
+                    }
+                }
+
+                Text {
+                    text: Math.round(root.cpuUsage) + "%"
+                    color: root.cpuUsage > 90 ? "#f87171" : "#ececec"
+                    font.family: root.fontFamily
+                    font.pixelSize: 11
+                    font.weight: Font.Bold
+                    horizontalAlignment: Text.AlignRight
+                }
+            }
+
+            // RAM
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Text {
+                    text: "RAM"
+                    color: root.secondaryText
+                    font.family: root.fontFamily
+                    font.pixelSize: 11
+                    font.weight: Font.DemiBold
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 4
+                    radius: 2
+                    color: "#151515"
+
+                    Rectangle {
+                        width: parent.width * Math.min(1, root.ramUsage / 100)
+                        height: parent.height
+                        radius: parent.radius
+                        color: "#d8d8d8"
+
+                        Behavior on width {
+                            NumberAnimation { duration: 400; easing.type: Easing.OutCubic }
+                        }
+                    }
+                }
+
+                Text {
+                    text: root.ramUsed + " / " + root.ramTotal + " GB"
+                    color: root.secondaryText
+                    font.family: root.fontFamily
+                    font.pixelSize: 10
+                    font.weight: Font.DemiBold
+                    horizontalAlignment: Text.AlignRight
+                }
+
+                Text {
+                    text: Math.round(root.ramUsage) + "%"
+                    color: root.ramUsage > 90 ? "#f87171" : "#ececec"
+                    font.family: root.fontFamily
+                    font.pixelSize: 11
+                    font.weight: Font.Bold
+                    horizontalAlignment: Text.AlignRight
+                }
+            }
+
+            // Temperatures row
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 12
+
+                // CPU temp
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 1
+
+                    Text {
+                        text: "CPU Temp"
+                        color: root.secondaryText
+                        font.family: root.fontFamily
+                        font.pixelSize: 10
+                        font.weight: Font.DemiBold
+                    }
+
+                    Text {
+                        text: root.cpuTemp > 0 ? root.cpuTemp + "°C" : "—"
+                        color: root.cpuTemp > 85 ? "#f87171" : (root.cpuTemp > 70 ? "#fb923c" : root.primaryText)
+                        font.family: root.fontFamily
+                        font.pixelSize: 14
+                        font.weight: Font.Bold
+                    }
+                }
+
+                // GPU temp
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 1
+
+                    Text {
+                        text: "GPU Temp"
+                        color: root.secondaryText
+                        font.family: root.fontFamily
+                        font.pixelSize: 10
+                        font.weight: Font.DemiBold
+                    }
+
+                    Text {
+                        text: root.gpuTemp >= 0 ? root.gpuTemp + "°C" : "N/A"
+                        color: root.gpuTemp > 85 ? "#f87171" : (root.gpuTemp > 70 ? "#fb923c" : (root.gpuTemp >= 0 ? root.primaryText : "#555555"))
+                        font.family: root.fontFamily
+                        font.pixelSize: 14
+                        font.weight: Font.Bold
+                    }
+                }
+
+                // Disk usage
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 1
+
+                    Text {
+                        text: "Disk"
+                        color: root.secondaryText
+                        font.family: root.fontFamily
+                        font.pixelSize: 10
+                        font.weight: Font.DemiBold
+                    }
+
+                    RowLayout {
+                        spacing: 4
+
+                        Rectangle {
+                            Layout.preferredWidth: 40
+                            Layout.preferredHeight: 4
+                            radius: 2
+                            color: "#151515"
+
+                            Rectangle {
+                                width: parent.width * Math.min(1, root.diskUsage / 100)
+                                height: parent.height
+                                radius: parent.radius
+                                color: root.diskUsage > 90 ? "#f87171" : "#d8d8d8"
+
+                                Behavior on width {
+                                    NumberAnimation { duration: 400; easing.type: Easing.OutCubic }
+                                }
+                            }
+                        }
+
+                        Text {
+                            text: Math.round(root.diskUsage) + "%"
+                            color: root.diskUsage > 90 ? "#f87171" : root.primaryText
+                            font.family: root.fontFamily
+                            font.pixelSize: 11
+                            font.weight: Font.Bold
+                        }
                     }
                 }
             }

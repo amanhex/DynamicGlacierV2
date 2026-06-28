@@ -1,0 +1,1193 @@
+{
+  "nodes": [
+    {
+      "id": "install",
+      "label": "install.sh",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "label": "install.sh script",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_usage",
+      "label": "usage()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L25",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_log",
+      "label": "log()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L51",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_warn",
+      "label": "warn()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L55",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_die",
+      "label": "die()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L60",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_has_cmd",
+      "label": "has_cmd()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L65",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_expand_path",
+      "label": "expand_path()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L69",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_run_as_root",
+      "label": "run_as_root()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L83",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_backup_existing_path",
+      "label": "backup_existing_path()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L97",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_strip_managed_autostart_block",
+      "label": "strip_managed_autostart_block()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L110",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_ensure_hyprland_autostart",
+      "label": "ensure_hyprland_autostart()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L121",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_install_with_apt",
+      "label": "install_with_apt()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L156",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_install_with_dnf",
+      "label": "install_with_dnf()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L175",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_install_with_pacman",
+      "label": "install_with_pacman()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L192",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_install_dependencies",
+      "label": "install_dependencies()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L224",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_install_config",
+      "label": "install_config()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L246",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_install_launcher",
+      "label": "install_launcher()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L266",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_doctor_ok",
+      "label": "doctor_ok()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L275",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_doctor_warn",
+      "label": "doctor_warn()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L279",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_doctor_fail",
+      "label": "doctor_fail()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L284",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_run_doctor",
+      "label": "run_doctor()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L289",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "install_print_summary",
+      "label": "print_summary()",
+      "file_type": "code",
+      "source_file": "install.sh",
+      "source_location": "L353",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "uninstall",
+      "label": "uninstall.sh",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "home_amanhex_projects_dynamicglacierv2_uninstall_sh__entry",
+      "label": "uninstall.sh script",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "uninstall_usage",
+      "label": "usage()",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L16",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "uninstall_log",
+      "label": "log()",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L36",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "uninstall_expand_path",
+      "label": "expand_path()",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L40",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "uninstall_strip_managed_autostart_block",
+      "label": "strip_managed_autostart_block()",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L54",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "uninstall_confirm",
+      "label": "confirm()",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L65",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "uninstall_remove_config",
+      "label": "remove_config()",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L85",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "uninstall_remove_launcher",
+      "label": "remove_launcher()",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L95",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "uninstall_remove_hyprland_autostart",
+      "label": "remove_hyprland_autostart()",
+      "file_type": "code",
+      "source_file": "uninstall.sh",
+      "source_location": "L105",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "install",
+      "target": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_usage",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_log",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_warn",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_die",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_has_cmd",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_expand_path",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_run_as_root",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_backup_existing_path",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L97",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_strip_managed_autostart_block",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L110",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_ensure_hyprland_autostart",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L121",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_install_with_apt",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_install_with_dnf",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L175",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_install_with_pacman",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L192",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_install_dependencies",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L224",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_install_config",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L246",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_install_launcher",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L266",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_doctor_ok",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L275",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_doctor_warn",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L279",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_doctor_fail",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L284",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_run_doctor",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L289",
+      "weight": 1.0
+    },
+    {
+      "source": "install",
+      "target": "install_print_summary",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L353",
+      "weight": 1.0
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "target": "install_die",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L411",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "target": "install_usage",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L421",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "target": "install_run_doctor",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L435",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "target": "install_install_dependencies",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L443",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "target": "install_install_config",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L444",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "target": "install_install_launcher",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L445",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "target": "install_ensure_hyprland_autostart",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L446",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "target": "install_print_summary",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L447",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_install_sh__entry",
+      "target": "install_has_cmd",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L449",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_run_as_root",
+      "target": "install_has_cmd",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L89",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_run_as_root",
+      "target": "install_die",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L94",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_backup_existing_path",
+      "target": "install_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L107",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_ensure_hyprland_autostart",
+      "target": "install_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L125",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_ensure_hyprland_autostart",
+      "target": "install_warn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L130",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_ensure_hyprland_autostart",
+      "target": "install_strip_managed_autostart_block",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L142",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_apt",
+      "target": "install_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L166",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_apt",
+      "target": "install_run_as_root",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L167",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_apt",
+      "target": "install_has_cmd",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L170",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_apt",
+      "target": "install_warn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L171",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_dnf",
+      "target": "install_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L186",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_dnf",
+      "target": "install_run_as_root",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L187",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_pacman",
+      "target": "install_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L202",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_pacman",
+      "target": "install_run_as_root",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L203",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_pacman",
+      "target": "install_has_cmd",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L205",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_with_pacman",
+      "target": "install_warn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L221",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_dependencies",
+      "target": "install_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L226",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_dependencies",
+      "target": "install_has_cmd",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L230",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_dependencies",
+      "target": "install_install_with_pacman",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L231",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_dependencies",
+      "target": "install_install_with_dnf",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L233",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_dependencies",
+      "target": "install_install_with_apt",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L235",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_dependencies",
+      "target": "install_warn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L237",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_config",
+      "target": "install_backup_existing_path",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L250",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_config",
+      "target": "install_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L252",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_install_launcher",
+      "target": "install_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L272",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_run_doctor",
+      "target": "install_has_cmd",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L292",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_run_doctor",
+      "target": "install_doctor_ok",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L293",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_run_doctor",
+      "target": "install_doctor_fail",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L295",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_run_doctor",
+      "target": "install_doctor_warn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L314",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_print_summary",
+      "target": "install_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L355",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_print_summary",
+      "target": "install_has_cmd",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L378",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "install_print_summary",
+      "target": "install_warn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "install.sh",
+      "source_location": "L379",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "uninstall",
+      "target": "home_amanhex_projects_dynamicglacierv2_uninstall_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "uninstall",
+      "target": "uninstall_usage",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "uninstall",
+      "target": "uninstall_log",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "uninstall",
+      "target": "uninstall_expand_path",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "uninstall",
+      "target": "uninstall_strip_managed_autostart_block",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "uninstall",
+      "target": "uninstall_confirm",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "uninstall",
+      "target": "uninstall_remove_config",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "uninstall",
+      "target": "uninstall_remove_launcher",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "uninstall",
+      "target": "uninstall_remove_hyprland_autostart",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L105",
+      "weight": 1.0
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_uninstall_sh__entry",
+      "target": "uninstall_usage",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L149",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_uninstall_sh__entry",
+      "target": "uninstall_confirm",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L163",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_uninstall_sh__entry",
+      "target": "uninstall_remove_config",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L164",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_uninstall_sh__entry",
+      "target": "uninstall_remove_launcher",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L165",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_uninstall_sh__entry",
+      "target": "uninstall_remove_hyprland_autostart",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L166",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "home_amanhex_projects_dynamicglacierv2_uninstall_sh__entry",
+      "target": "uninstall_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L169",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "uninstall_remove_config",
+      "target": "uninstall_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L88",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "uninstall_remove_launcher",
+      "target": "uninstall_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L98",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "uninstall_remove_hyprland_autostart",
+      "target": "uninstall_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L109",
+      "weight": 1.0,
+      "context": "call"
+    },
+    {
+      "source": "uninstall_remove_hyprland_autostart",
+      "target": "uninstall_strip_managed_autostart_block",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "uninstall.sh",
+      "source_location": "L115",
+      "weight": 1.0,
+      "context": "call"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
