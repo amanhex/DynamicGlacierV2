@@ -27,9 +27,6 @@ Scope {
     property bool mediaHoverSuppressed: false
     property bool liveLinksEnabled: true
     property bool liveLinksPrimed: false
-    property bool privacyDebugEnabled: false
-    property bool debugMicrophoneActive: false
-    property bool debugCameraActive: false
     property bool polledMicrophoneActive: false
     property bool polledCameraActive: false
     property date currentDateTime: new Date()
@@ -58,7 +55,6 @@ Scope {
 
     function navigateToNextPage() {
         root.currentPage = root.nextPage();
-        console.log("navigateToNextPage =>", root.currentPage);
     }
 
     function navigateToPage(page) {
@@ -98,8 +94,8 @@ Scope {
     readonly property var mediaLoopState: root.activePlayer?.loopState ?? MprisLoopState.None
     readonly property bool mediaLoopActive: root.mediaLoopState !== MprisLoopState.None
     readonly property string mediaLoopStateText: root.mediaLoopState === MprisLoopState.Track ? "ONE" : (root.mediaLoopState === MprisLoopState.Playlist ? "ALL" : "RPT")
-    readonly property bool microphoneActive: root.privacyDebugEnabled ? root.debugMicrophoneActive : root.liveLinksEnabled && (root.detectMicrophoneActivity() || root.polledMicrophoneActive)
-    readonly property bool cameraActive: root.privacyDebugEnabled ? root.debugCameraActive : root.liveLinksEnabled && (root.detectVideoActivity() || root.polledCameraActive)
+    readonly property bool microphoneActive: root.liveLinksEnabled && (root.detectMicrophoneActivity() || root.polledMicrophoneActive)
+    readonly property bool cameraActive: root.liveLinksEnabled && (root.detectVideoActivity() || root.polledCameraActive)
     readonly property bool privacyActive: root.microphoneActive || root.cameraActive
     readonly property bool compactPrivacyIndicators: root.handleStyle === "strip" && root.visualMode === "idle" && !root.interactionOpen
     readonly property color microphoneIndicatorColor: "#ff9f1a"
@@ -691,7 +687,7 @@ Scope {
     Timer {
         interval: 1200
         repeat: true
-        running: root.liveLinksEnabled && !root.privacyDebugEnabled
+        running: root.liveLinksEnabled
         triggeredOnStart: true
         onTriggered: {
             if (!privacyPollProc.running)
@@ -966,7 +962,6 @@ Scope {
                         root.mode = "idle";
                     }
                     root.navigateToNextPage();
-                        console.log("onNavigateRequested handled, currentPage:", root.currentPage);
                 }
                 onWifiSettingsRequested: wifiSettingsProc.exec(["sh", "-c", "kitty --title 'WiFi Settings' nmtui-connect &"])
                 onBtSettingsRequested: btSettingsProc.exec(["sh", "-c", "blueman-manager &"])
@@ -1157,18 +1152,6 @@ Scope {
 
         function live(enabled: string): void {
             root.liveLinksEnabled = root.boolFromIpc(enabled);
-        }
-
-        function privacy(micActive: string, cameraActive: string): void {
-            root.privacyDebugEnabled = true;
-            root.debugMicrophoneActive = root.boolFromIpc(micActive);
-            root.debugCameraActive = root.boolFromIpc(cameraActive);
-        }
-
-        function privacyLive(): void {
-            root.privacyDebugEnabled = false;
-            root.debugMicrophoneActive = false;
-            root.debugCameraActive = false;
         }
 
         function notify(summary: string, message: string, app: string): void {

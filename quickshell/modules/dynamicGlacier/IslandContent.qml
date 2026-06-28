@@ -228,8 +228,6 @@ Item {
 
     Item {
         id: idleContent
-        onVisibleChanged: console.log("idleContent visible:", visible)
-        onOpacityChanged: console.log("idleContent opacity:", opacity)
 
         anchors.fill: parent
         opacity: root.mode === "idle" && root.forceExpanded && root.currentPage === "utilities" ? 1 : 0
@@ -326,7 +324,6 @@ Item {
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
-                                    console.log("navButton clicked")
                                     root.navigateRequested()
                                 }
                             }
@@ -485,8 +482,6 @@ Item {
 
     RowLayout {
         id: mediaContent
-        onVisibleChanged: console.log("mediaContent visible:", visible)
-        onOpacityChanged: console.log("mediaContent opacity:", opacity)
 
         anchors.fill: parent
         anchors.leftMargin: root.mediaHorizontalPadding
@@ -634,7 +629,6 @@ Item {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            console.log("navButton clicked")
                             root.navigateRequested()
                         }
                     }
@@ -893,8 +887,6 @@ Item {
     // ── System Card (CPU, RAM, Temp only) ────────────────────────────────────
     Item {
         id: systemContent
-        onVisibleChanged: console.log("systemContent visible:", visible)
-        onOpacityChanged: console.log("systemContent opacity:", opacity)
 
         anchors.fill: parent
         anchors.leftMargin: root.mediaHorizontalPadding
@@ -952,7 +944,6 @@ Item {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            console.log("navButton clicked")
                             root.navigateRequested()
                         }
                     }
