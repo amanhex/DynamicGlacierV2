@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="Dynamic Glacier"
-CONFIG_NAME="DynamicGlacier"
+APP_NAME="Dynamic Glacier V2"
+CONFIG_NAME="DynamicGlacierV2"
 REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$REPO_ROOT/quickshell"
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_BIN_HOME="${XDG_BIN_HOME:-$HOME/.local/bin}"
 CONFIG_DIR="$XDG_CONFIG_HOME/quickshell/$CONFIG_NAME"
-LAUNCHER_PATH="$XDG_BIN_HOME/dynamic-glacier"
+LAUNCHER_PATH="$XDG_BIN_HOME/dynamic-glacier-v2"
 HYPR_CONFIG_PATH="$XDG_CONFIG_HOME/hypr/hyprland.conf"
-AUTOSTART_START_MARKER="# >>> Dynamic Glacier autostart >>>"
-AUTOSTART_END_MARKER="# <<< Dynamic Glacier autostart <<<"
+AUTOSTART_START_MARKER="# >>> Dynamic Glacier V2 autostart >>>"
+AUTOSTART_END_MARKER="# <<< Dynamic Glacier V2 autostart <<<"
 AUTOSTART_LINE="exec-once = $LAUNCHER_PATH"
 COPY_MODE=1
 SKIP_DEPS=0
@@ -157,6 +157,7 @@ install_with_apt() {
     local packages=(
         fontconfig
         fonts-noto-core
+        lm-sensors
         playerctl
         psmisc
         pulseaudio-utils
@@ -176,6 +177,7 @@ install_with_dnf() {
     local packages=(
         fontconfig
         google-noto-sans-fonts
+        lm_sensors
         playerctl
         psmisc
         pulseaudio-utils
@@ -193,6 +195,7 @@ install_with_pacman() {
     local packages=(
         fontconfig
         libpulse
+        lm_sensors
         noto-fonts
         playerctl
         psmisc
@@ -325,6 +328,12 @@ run_doctor() {
         fi
     done
 
+    if has_cmd sensors; then
+        doctor_ok "sensors (lm-sensors) is available for hardware temperature monitoring"
+    else
+        doctor_warn "sensors is missing; CPU temperature will use fallback methods"
+    fi
+
     if [ -f "$HYPR_CONFIG_PATH" ]; then
         if grep -Fqx "$AUTOSTART_LINE" "$HYPR_CONFIG_PATH" || grep -Fq "$AUTOSTART_START_MARKER" "$HYPR_CONFIG_PATH"; then
             doctor_ok "Hyprland autostart is registered in $HYPR_CONFIG_PATH"
@@ -381,6 +390,10 @@ print_summary() {
 
     if has_cmd fc-match && ! fc-match "Noto Sans" 2>/dev/null | grep -qi 'NotoSans'; then
         warn "Noto Sans is not available in fontconfig. The widget will fall back to another sans font."
+    fi
+
+    if ! has_cmd sensors; then
+        warn "sensors (lm-sensors) is not available; CPU temperature will use fallback methods."
     fi
 
     if [ "${#WARNINGS[@]}" -gt 0 ]; then

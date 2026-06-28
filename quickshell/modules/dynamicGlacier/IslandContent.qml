@@ -282,9 +282,56 @@ Item {
                     }
                 }
 
+                // Right side: Nav button centered vertically, WiFi/Bluetooth below it
                 ColumnLayout {
-                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    Layout.alignment: Qt.AlignTop | Qt.AlignRight
                     spacing: 5
+
+                    // Nav button
+                    Item {
+                        Layout.alignment: Qt.AlignRight
+                        Layout.preferredWidth: 20
+                        Layout.preferredHeight: 20
+                        Layout.topMargin: 0
+
+                        Rectangle {
+                            id: idleNavRect
+                            anchors.centerIn: parent
+                            width: 20
+                            height: 20
+                            radius: 10
+                            color: idleNavMouse.containsMouse ? "#1a1a1a" : "#0a0a0a"
+                            border.width: 1
+                            border.color: "#232323"
+
+                            MIcon {
+                                id: idleNavIcon
+                                anchors.centerIn: parent
+                                name: root.currentPage === "media" ? "tune" : (root.currentPage === "utilities" ? "memory" : "music_note")
+                                size: 12
+                                color: "#999999"
+                            }
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: idleNavIcon.text === "" ? (root.currentPage === "media" ? "♫" : (root.currentPage === "utilities" ? "⚙" : "♪")) : ""
+                                color: "#999999"
+                                font.family: root.fontFamily
+                                font.pixelSize: 12
+                            }
+
+                            MouseArea {
+                                id: idleNavMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    console.log("navButton clicked")
+                                    root.navigateRequested()
+                                }
+                            }
+                        }
+                    }
 
                     // WiFi
                     Item {
@@ -356,51 +403,6 @@ Item {
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: root.btSettingsRequested()
-                        }
-                    }
-
-                    // Navigation button (cycle pages) - wrapped in Item for proper vertical centering
-                    Item {
-                        Layout.alignment: Qt.AlignRight
-                        Layout.preferredWidth: 20
-                        Layout.preferredHeight: 20
-
-                        Rectangle {
-                            id: idleNavRect
-                            anchors.centerIn: parent
-                            width: 20
-                            height: 20
-                            radius: 10
-                            color: idleNavMouse.containsMouse ? "#1a1a1a" : "#0a0a0a"
-                            border.width: 1
-                            border.color: "#232323"
-
-                            MIcon {
-                                id: idleNavIcon
-                                anchors.centerIn: parent
-                                name: root.currentPage === "media" ? "tune" : (root.currentPage === "utilities" ? "memory" : "music_note")
-                                size: 12
-                                color: "#999999"
-                            }
-
-                            Text {
-                                anchors.centerIn: parent
-                                text: idleNavIcon.text === "" ? (root.currentPage === "media" ? "♫" : (root.currentPage === "utilities" ? "⚙" : "♪")) : ""
-                                color: "#999999"
-                                font.family: root.fontFamily
-                                font.pixelSize: 12
-                            }
-
-                            MouseArea {
-                                id: idleNavMouse
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    console.log("navButton clicked")
-                                    root.navigateRequested()
-                                }
-                            }
                         }
                     }
                 }

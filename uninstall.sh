@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="Dynamic Glacier"
-CONFIG_NAME="DynamicGlacier"
+APP_NAME="Dynamic Glacier V2"
+CONFIG_NAME="DynamicGlacierV2"
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_BIN_HOME="${XDG_BIN_HOME:-$HOME/.local/bin}"
 CONFIG_DIR="$XDG_CONFIG_HOME/quickshell/$CONFIG_NAME"
-LAUNCHER_PATH="$XDG_BIN_HOME/dynamic-glacier"
+LAUNCHER_PATH="$XDG_BIN_HOME/dynamic-glacier-v2"
 HYPR_CONFIG_PATH="$XDG_CONFIG_HOME/hypr/hyprland.conf"
-AUTOSTART_START_MARKER="# >>> Dynamic Glacier autostart >>>"
-AUTOSTART_END_MARKER="# <<< Dynamic Glacier autostart <<<"
+AUTOSTART_START_MARKER="# >>> Dynamic Glacier V2 autostart >>>"
+AUTOSTART_END_MARKER="# <<< Dynamic Glacier V2 autostart <<<"
 AUTOSTART_LINE="exec-once = $LAUNCHER_PATH"
 ASSUME_YES=0
 
