@@ -34,18 +34,51 @@ RAM_TOTAL_FRA=$(( RAM_TOTAL_DEC % 10 ))
 RAM_USED_FMT="${RAM_USED_INT}.${RAM_USED_FRA}"
 RAM_TOTAL_FMT="${RAM_TOTAL_INT}.${RAM_TOTAL_FRA}"
 
-# CPU temp - use x86_pkg_temp or first reasonable thermal zone
-CPU_TEMP=0
+# CPU temp - prioritize x86_pkg_temp thermal zone (matches btop), then coretemp Package id 0
+CPU_TEMP_C=0
+
+# First try x86_pkg_temp thermal zone (Intel CPU package temp - matches btop)
 for t in /sys/class/thermal/thermal_zone*/temp; do
-    val=$(cat "$t" 2>/dev/null || continue)
-    if [ "$val" -ge 20000 ] && [ "$val" -le 150000 ]; then
-        CPU_TEMP="$val"
-        break
+    zone_type=$(cat "${t%/temp}/type" 2>/dev/null || echo "")
+    if [ "$zone_type" = "x86_pkg_temp" ]; then
+        val=$(cat "$t" 2>/dev/null || continue)
+        if [ "$val" -ge 20000 ] && [ "$val" -le 150000 ]; then
+            CPU_TEMP_C=$((val / 1000))
+            break
+        fi
     fi
 done
-if [ "$CPU_TEMP" = "0" ]; then
-    CPU_TEMP=$(cat /sys/class/thermal/thermal_zone*/temp 2>/dev/null | head -1 || echo 0)
+
+# Fallback to coretemp hwmon Package id 0
+if [ "$CPU_TEMP_C" = "0" ]; then
+    for h in /sys/class/hwmon/hwmon*/name; do
+        if [ "$(cat "$h" 2>/dev/null)" = "coretemp" ]; then
+            hwmon_dir="${h%/name}"
+            i=1
+            for label in "$hwmon_dir"/temp*_label; do
+                if [ "$(cat "$label" 2>/dev/null)" = "Package id 0" ]; then
+                    pkg_temp=$(cat "$hwmon_dir/temp${i}_input" 2>/dev/null || echo 0)
+                    if [ "$pkg_temp" -gt 0 ]; then
+                        CPU_TEMP_C=$((pkg_temp / 1000))
+                    fi
+                    break
+                fi
+                i=$((i + 1))
+            done
+            break
+        fi
+    done
 fi
-CPU_TEMP_C=$((CPU_TEMP / 1000))
+
+# Final fallback to other thermal zones
+if [ "$CPU_TEMP_C" = "0" ]; then
+    for t in /sys/class/thermal/thermal_zone*/temp; do
+        val=$(cat "$t" 2>/dev/null || continue)
+        if [ "$val" -ge 20000 ] && [ "$val" -le 150000 ]; then
+            CPU_TEMP_C=$((val / 1000))
+            break
+        fi
+    done
+fi
 
 printf '%s\t%s\t%s\t%s\t%s\n' "$CPU_PCT" "$RAM_USED_PCT" "$CPU_TEMP_C" "$RAM_USED_FMT" "$RAM_TOTAL_FMT"
