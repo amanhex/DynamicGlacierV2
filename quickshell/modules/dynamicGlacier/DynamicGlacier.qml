@@ -58,6 +58,7 @@ Scope {
 
     function navigateToNextPage() {
         root.currentPage = root.nextPage();
+        console.log("navigateToNextPage =>", root.currentPage);
     }
 
     function navigateToPage(page) {
@@ -126,20 +127,16 @@ Scope {
     property string ramUsed: "0"
     property string ramTotal: "0"
     property real cpuTemp: 0
-    property real gpuTemp: -1
-    property real diskUsage: 0
 
     function updateSystemStats(text) {
         const parts = text.trim().split("\t");
-        if (parts.length < 6)
+        if (parts.length < 5)
             return;
         root.cpuUsage = parseFloat(parts[0]) || 0;
         root.ramUsage = parseFloat(parts[1]) || 0;
         root.cpuTemp = parseFloat(parts[2]) || 0;
-        root.gpuTemp = parseFloat(parts[3]) || -1;
-        root.ramUsed = parts[4] || "0";
-        root.ramTotal = parts[5] || "0";
-        root.diskUsage = parts.length > 6 ? (parseFloat(parts[6]) || 0) : 0;
+        root.ramUsed = parts[3] || "0";
+        root.ramTotal = parts[4] || "0";
     }
 
     function targetWidth() {
@@ -786,13 +783,13 @@ Scope {
         id: systemStatsTimer
         interval: 1200
         repeat: true
-        running: root.currentPage === "system"
+        running: true
         triggeredOnStart: true
         onTriggered: {
             if (!sysStatsPollProc.running)
                 sysStatsPollProc.exec(["sh", "-c", "INPUT_PATH=\"$INPUT_PATH\"
-# CPU usage delta
-read -r _ PREV_TOTAL PREV_WORK PREV_IDLE < /tmp/dg_cpu_prev 2>/dev/null || true
+# CPU usage delta (htop/top/btop method)
+read -r _ PREV_TOTAL PREV_IDLE < /tmp/dg_cpu_prev 2>/dev/null || true
 read -r CPU < /proc/stat
 CPU=($CPU)
 TOTAL=$((${CPU[1]}+${CPU[2]}+${CPU[3]}+${CPU[4]}+${CPU[5]}+${CPU[6]}+${CPU[7]}))
@@ -806,7 +803,7 @@ else
 fi
 echo \"$TOTAL $IDLE\" > /tmp/dg_cpu_prev
 
-# RAM from /proc/meminfo
+# RAM from /proc/meminfo (available memory method)
 eval $(grep -E '^(MemTotal|MemAvailable):' /proc/meminfo | tr -d ' kB' | sed 's/:/=/')
 RAM_TOTAL_KB=$MemTotal
 RAM_AVAIL_KB=$MemAvailable
@@ -823,24 +820,11 @@ RAM_TOTAL_FRA=$(( RAM_TOTAL_DEC % 10 ))
 RAM_USED_FMT=\"${RAM_USED_INT}.${RAM_USED_FRA}\"
 RAM_TOTAL_FMT=\"${RAM_TOTAL_INT}.${RAM_TOTAL_FRA}\"
 
-# CPU temp
+# CPU temp (first thermal zone)
 CPU_TEMP=$(cat /sys/class/thermal/thermal_zone*/temp 2>/dev/null | head -1 || echo 0)
 CPU_TEMP_C=$((CPU_TEMP / 1000))
 
-# GPU temp
-GPU_TEMP_C=-1
-for hwmon in /sys/class/hwmon/hwmon*/name; do
-  NAME=$(cat \"$hwmon\" 2>/dev/null)
-  case \"$NAME\" in
-    amdgpu|nouveau|nvidia|i915)
-      TPATH=$(dirname \"$hwmon\")/temp1_input
-      [ -r \"$TPATH\" ] && GPU_TEMP_C=$(( $(cat \"$TPATH\" 2>/dev/null || echo 0) / 1000 )) && break ;;
-  esac
-done
-
-# Disk usage
-DISK_PCT=$(df / 2>/dev/null | tail -1 | awk '{print $5}' | tr -d '%' || echo 0)
-printf '%s\\t%s\\t%s\\t%s\\t%s\\t%s\\t%s\\n' \"$CPU_PCT\" \"$RAM_USED_PCT\" \"$CPU_TEMP_C\" \"$GPU_TEMP_C\" \"$RAM_USED_FMT\" \"$RAM_TOTAL_FMT\" \"${DISK_PCT:-0}\"
+printf '%s\\t%s\\t%s\\t%s\\t%s\\n' \"$CPU_PCT\" \"$RAM_USED_PCT\" \"$CPU_TEMP_C\" \"$RAM_USED_FMT\" \"$RAM_TOTAL_FMT\"
 "]);
         }
     }
@@ -999,8 +983,6 @@ printf '%s\\t%s\\t%s\\t%s\\t%s\\t%s\\t%s\\n' \"$CPU_PCT\" \"$RAM_USED_PCT\" \"$C
                 ramUsed: root.ramUsed
                 ramTotal: root.ramTotal
                 cpuTemp: root.cpuTemp
-                gpuTemp: root.gpuTemp
-                diskUsage: root.diskUsage
                 onPreviousRequested: root.mediaPrevious()
                 onPlayPauseRequested: root.mediaTogglePlaying()
                 onNextRequested: root.mediaNext()
@@ -1022,6 +1004,7 @@ printf '%s\\t%s\\t%s\\t%s\\t%s\\t%s\\t%s\\n' \"$CPU_PCT\" \"$RAM_USED_PCT\" \"$C
                         root.mode = "idle";
                     }
                     root.navigateToNextPage();
+                        console.log("onNavigateRequested handled, currentPage:", root.currentPage);
                 }
                 onWifiSettingsRequested: wifiSettingsProc.exec(["sh", "-c", "kitty --title 'WiFi Settings' nmtui-connect &"])
                 onBtSettingsRequested: btSettingsProc.exec(["sh", "-c", "bluedevil-wizard &"])

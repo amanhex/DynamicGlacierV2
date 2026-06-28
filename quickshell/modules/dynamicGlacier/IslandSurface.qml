@@ -50,8 +50,6 @@ Item {
     property string ramUsed: "0"
     property string ramTotal: "0"
     property real cpuTemp: 0
-    property real gpuTemp: -1
-    property real diskUsage: 0
     readonly property bool expanded: mode !== "idle" || forceExpanded
     readonly property real bottomRadius: Math.max(1, Math.min(height / 2, expanded ? Math.min(height * 0.28, 24) : Math.min(height * 0.42, 8)))
     readonly property color surfaceColor: !expanded && handleStyle === "strip" ? "#0c0c0c" : "#000000"
@@ -455,8 +453,6 @@ Item {
             ramUsed: root.ramUsed
             ramTotal: root.ramTotal
             cpuTemp: root.cpuTemp
-            gpuTemp: root.gpuTemp
-            diskUsage: root.diskUsage
             onPreviousRequested: root.previousRequested()
             onPlayPauseRequested: root.playPauseRequested()
             onNextRequested: root.nextRequested()
