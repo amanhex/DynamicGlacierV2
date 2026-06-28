@@ -969,7 +969,7 @@ Scope {
                         console.log("onNavigateRequested handled, currentPage:", root.currentPage);
                 }
                 onWifiSettingsRequested: wifiSettingsProc.exec(["sh", "-c", "kitty --title 'WiFi Settings' nmtui-connect &"])
-                onBtSettingsRequested: btSettingsProc.exec(["sh", "-c", "bluedevil-wizard &"])
+                onBtSettingsRequested: btSettingsProc.exec(["sh", "-c", "blueman-manager &"])
                 onSeekRequested: position => root.mediaSeek(position)
                 onHandleStyleRequested: style => root.setHandleStyle(style)
             }

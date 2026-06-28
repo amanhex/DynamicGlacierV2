@@ -23,7 +23,7 @@ depends=(
 )
 optdepends=(
   'kitty: WiFi settings via nmtui'
-  'bluedevil: Bluetooth device wizard'
+  'blueman: Bluetooth manager (blueman-manager)'
 )
 makedepends=('git')
 provides=('dynamic-glacier')

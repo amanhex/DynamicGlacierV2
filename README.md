@@ -122,7 +122,7 @@ bash uninstall.sh --yes
 - Tray indicators: circular battery charging chip, cava-style audio bars.
 - Subtle open U-shaped trace for volume and brightness changes.
 - WiFi status (signal strength + SSID) and Bluetooth (device name + battery %) in idle mode.
-- Click WiFi/BT to open settings (nmtui / bluedevil-wizard).
+- Click WiFi/BT to open settings (nmtui / blueman-manager).
 - Battery icon + percentage on hover through UPower.
 - Microphone and camera privacy dots with separate colors and non-overlapping layout.
 - PipeWire privacy detection plus local fallbacks for `pactl` microphone streams and `/dev/video*` camera users.
@@ -166,7 +166,7 @@ To change the WiFi/BT settings apps, edit these lines in `DynamicGlacier.qml`:
 
 ```qml
 onWifiSettingsRequested: wifiSettingsProc.exec(["sh", "-c", "kitty --title 'WiFi Settings' nmtui-connect &"])
-onBtSettingsRequested: btSettingsProc.exec(["sh", "-c", "bluedevil-wizard &"])
+onBtSettingsRequested: btSettingsProc.exec(["sh", "-c", "blueman-manager &"])
 ```
 
 </details>
