@@ -359,40 +359,47 @@ Item {
                         }
                     }
 
-                    // Navigation button (inline - restores clickable area in RowLayout)
-                    Rectangle {
+                    // Navigation button (cycle pages) - wrapped in Item for proper vertical centering
+                    Item {
                         Layout.alignment: Qt.AlignRight
                         Layout.preferredWidth: 20
                         Layout.preferredHeight: 20
-                        radius: 10
-                        color: navMouse.containsMouse ? "#1a1a1a" : "#0a0a0a"
-                        border.width: 1
-                        border.color: "#232323"
 
-                        MIcon {
-                            id: navIcon
+                        Rectangle {
+                            id: idleNavRect
                             anchors.centerIn: parent
-                            name: root.currentPage === "media" ? "tune" : (root.currentPage === "utilities" ? "memory" : "music_note")
-                            size: 12
-                            color: "#999999"
-                        }
+                            width: 20
+                            height: 20
+                            radius: 10
+                            color: idleNavMouse.containsMouse ? "#1a1a1a" : "#0a0a0a"
+                            border.width: 1
+                            border.color: "#232323"
 
-                        Text {
-                            anchors.centerIn: parent
-                            text: navIcon.text === "" ? (root.currentPage === "media" ? "♫" : (root.currentPage === "utilities" ? "⚙" : "♪")) : ""
-                            color: "#999999"
-                            font.family: root.fontFamily
-                            font.pixelSize: 12
-                        }
+                            MIcon {
+                                id: idleNavIcon
+                                anchors.centerIn: parent
+                                name: root.currentPage === "media" ? "tune" : (root.currentPage === "utilities" ? "memory" : "music_note")
+                                size: 12
+                                color: "#999999"
+                            }
 
-                        MouseArea {
-                            id: navMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                console.log("navButton clicked")
-                                root.navigateRequested()
+                            Text {
+                                anchors.centerIn: parent
+                                text: idleNavIcon.text === "" ? (root.currentPage === "media" ? "♫" : (root.currentPage === "utilities" ? "⚙" : "♪")) : ""
+                                color: "#999999"
+                                font.family: root.fontFamily
+                                font.pixelSize: 12
+                            }
+
+                            MouseArea {
+                                id: idleNavMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    console.log("navButton clicked")
+                                    root.navigateRequested()
+                                }
                             }
                         }
                     }
