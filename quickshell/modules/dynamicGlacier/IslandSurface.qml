@@ -369,9 +369,9 @@ Item {
                 ctx.lineCap = "round";
                 ctx.lineJoin = "round";
 
-                ctx.strokeStyle = "rgba(190, 190, 190, 0.22)";
-                tracePath(ctx, 1);
-                ctx.stroke();
+                // ctx.strokeStyle = "rgba(190, 190, 190, 0.22)";
+                // tracePath(ctx, 1);
+                // ctx.stroke();
 
                 if (progress > 0) {
                     ctx.strokeStyle = "rgba(245, 245, 245, 0.92)";
@@ -380,12 +380,6 @@ Item {
                 }
             }
 
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 160
-                    easing.type: Easing.OutCubic
-                }
-            }
 
             onWidthChanged: requestPaint()
             onHeightChanged: requestPaint()

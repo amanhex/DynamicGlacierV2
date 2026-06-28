@@ -298,7 +298,7 @@ Item {
                         Layout.alignment: Qt.AlignRight
                         Layout.preferredWidth: 20
                         Layout.preferredHeight: 20
-                        Layout.topMargin: 0
+                        Layout.topMargin: -10
 
                         Rectangle {
                             id: idleNavRect
@@ -488,91 +488,96 @@ Item {
         }
     }
 
-    RowLayout {
+    ColumnLayout {
         id: mediaContent
 
         anchors.fill: parent
         anchors.leftMargin: root.mediaHorizontalPadding
         anchors.rightMargin: root.mediaHorizontalPadding
-        spacing: root.controlSpacing
+        spacing: 0
         opacity: (root.mode === "media" || (root.mode === "idle" && root.forceExpanded && root.currentPage === "media")) ? 1 : 0
         visible: opacity > 0
 
-        Rectangle {
-            id: mediaArtwork
+        // Top row: artwork + controls column
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: root.controlSpacing
 
-            Layout.alignment: Qt.AlignVCenter
-            Layout.preferredWidth: root.artworkSize
-            Layout.preferredHeight: root.artworkSize
-            radius: root.artworkRadius
-            color: "#000000"
-            border.width: 1
-            border.color: root.playing ? "#2a2a2a" : "#171717"
-            clip: true
+            Rectangle {
+                id: mediaArtwork
 
-            Image {
-                id: mediaCoverSource
+                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredWidth: root.artworkSize
+                Layout.preferredHeight: root.artworkSize
+                radius: root.artworkRadius
+                color: "#000000"
+                border.width: 1
+                border.color: root.playing ? "#2a2a2a" : "#171717"
+                clip: true
 
-                anchors.fill: parent
-                source: root.artUrl
-                fillMode: Image.PreserveAspectCrop
-                asynchronous: true
-                visible: false
-            }
+                Image {
+                    id: mediaCoverSource
 
-            OpacityMask {
-                anchors.fill: parent
-                source: mediaCoverSource
-                visible: root.artUrl !== "" && mediaCoverSource.status === Image.Ready
-
-                maskSource: Rectangle {
-                    width: mediaArtwork.width
-                    height: mediaArtwork.height
-                    radius: mediaArtwork.radius
+                    anchors.fill: parent
+                    source: root.artUrl
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                    visible: false
                 }
-            }
 
-            Row {
-                anchors.centerIn: parent
-                spacing: 3
-                visible: root.artUrl === "" || mediaCoverSource.status !== Image.Ready
+                OpacityMask {
+                    anchors.fill: parent
+                    source: mediaCoverSource
+                    visible: root.artUrl !== "" && mediaCoverSource.status === Image.Ready
 
-                Repeater {
-                    model: 3
+                    maskSource: Rectangle {
+                        width: mediaArtwork.width
+                        height: mediaArtwork.height
+                        radius: mediaArtwork.radius
+                    }
+                }
 
-                    Rectangle {
-                        width: 4
-                        height: root.playing ? (12 + index * 5) : 10
-                        radius: 2
-                        color: root.playing ? root.accent : "#4b4b4b"
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 3
+                    visible: root.artUrl === "" || mediaCoverSource.status !== Image.Ready
 
-                        SequentialAnimation on height {
-                            running: root.mode === "media" && root.playing
-                            loops: Animation.Infinite
+                    Repeater {
+                        model: 3
 
-                            NumberAnimation {
-                                to: 10 + index * 4
-                                duration: 360 + index * 80
-                                easing.type: Easing.InOutSine
-                            }
+                        Rectangle {
+                            width: 4
+                            height: root.playing ? (12 + index * 5) : 10
+                            radius: 2
+                            color: root.playing ? root.accent : "#4b4b4b"
 
-                            NumberAnimation {
-                                to: 23 - index * 3
-                                duration: 420 + index * 80
-                                easing.type: Easing.InOutSine
+                            SequentialAnimation on height {
+                                running: root.mode === "media" && root.playing
+                                loops: Animation.Infinite
+
+                                NumberAnimation {
+                                    to: 10 + index * 4
+                                    duration: 360 + index * 80
+                                    easing.type: Easing.InOutSine
+                                }
+
+                                NumberAnimation {
+                                    to: 23 - index * 3
+                                    duration: 420 + index * 80
+                                    easing.type: Easing.InOutSine
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        ColumnLayout {
-            Layout.alignment: Qt.AlignVCenter
-            Layout.fillWidth: true
-            spacing: root.sectionSpacing
+            ColumnLayout {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+                spacing: root.sectionSpacing
 
-            HandleStyleSwitch {
+                HandleStyleSwitch {
                 handleStyle: root.handleStyle
                 batteryCharging: root.batteryCharging
                 batteryLevel: root.batteryLevel
@@ -880,6 +885,43 @@ Item {
                         cursorShape: Qt.PointingHandCursor
                         onClicked: root.favoriteRequested()
                     }
+                }
+            }
+        }
+        }
+
+        // Spacer to push chevron to bottom
+        Item {
+            Layout.fillHeight: true
+        }
+
+        // Chevron expand indicator - aligned with play button, bottom margin
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.leftMargin: (root.artworkSize + root.controlSpacing) / 2
+            Layout.bottomMargin: 5
+            spacing: root.controlSpacing
+            visible: root.mediaAvailable
+
+            Rectangle {
+                Layout.preferredWidth: 28
+                Layout.preferredHeight: 20
+                radius: 10
+                color: chevronMouse.containsMouse ? "#151515" : "#090909"
+                border.width: 0
+
+                MIcon {
+                    anchors.centerIn: parent
+                    name: "keyboard_arrow_down"
+                    size: 16
+                    color: root.primaryText
+                }
+
+                MouseArea {
+                    id: chevronMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                 }
             }
         }
