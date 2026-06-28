@@ -52,7 +52,15 @@ Item {
     readonly property color primaryText: "#f7f7f7"
     readonly property color secondaryText: "#7f7f7f"
     readonly property color accent: "#ffffff"
-    readonly property int mediaHorizontalPadding: 24
+    readonly property int mediaHorizontalPadding: 28
+    readonly property int cardTopPadding: 14
+    readonly property int cardBottomPadding: 12
+    readonly property int cardHorizontalPadding: 20
+    readonly property int sectionSpacing: 12
+    readonly property int rowSpacing: 8
+    readonly property int controlSpacing: 10
+    readonly property int artworkSize: 58
+    readonly property int artworkRadius: 20
     readonly property real normalizedMediaPosition: root.normalizedSeconds(mediaPosition)
     readonly property real normalizedMediaLength: root.normalizedSeconds(mediaLength)
     readonly property real mediaProgress: normalizedMediaLength > 0 ? Math.max(0, Math.min(1, normalizedMediaPosition / normalizedMediaLength)) : 0
@@ -235,11 +243,11 @@ Item {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.leftMargin: 16
-            anchors.rightMargin: 16
-            anchors.topMargin: 6
-            anchors.bottomMargin: 7
-            spacing: 2
+            anchors.leftMargin: root.cardHorizontalPadding
+            anchors.rightMargin: root.cardHorizontalPadding
+            anchors.topMargin: root.cardTopPadding
+            anchors.bottomMargin: root.cardBottomPadding
+            spacing: root.sectionSpacing
 
             HandleStyleSwitch {
                 handleStyle: root.handleStyle
@@ -253,7 +261,7 @@ Item {
             RowLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                spacing: 12
+                spacing: root.rowSpacing
 
                 ColumnLayout {
                     Layout.fillWidth: true
@@ -283,7 +291,7 @@ Item {
                 // Right side: Nav button centered vertically, WiFi/Bluetooth below it
                 ColumnLayout {
                     Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                    spacing: 5
+                    spacing: root.rowSpacing
 
                     // Nav button
                     Item {
@@ -338,7 +346,7 @@ Item {
 
                         Row {
                             id: wifiRow
-                            spacing: 4
+                            spacing: 6
 
                             MIcon {
                                 name: root.wifiConnected ? (root.wifiSignal >= 70 ? "wifi" : root.wifiSignal >= 40 ? "wifi_2_bar" : "wifi_1_bar") : "wifi_off"
@@ -374,7 +382,7 @@ Item {
 
                         Row {
                             id: btRow
-                            spacing: 4
+                            spacing: 6
 
                             MIcon {
                                 name: "bluetooth"
@@ -486,7 +494,7 @@ Item {
         anchors.fill: parent
         anchors.leftMargin: root.mediaHorizontalPadding
         anchors.rightMargin: root.mediaHorizontalPadding
-        spacing: 24
+        spacing: root.controlSpacing
         opacity: (root.mode === "media" || (root.mode === "idle" && root.forceExpanded && root.currentPage === "media")) ? 1 : 0
         visible: opacity > 0
 
@@ -494,9 +502,9 @@ Item {
             id: mediaArtwork
 
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredWidth: 54
-            Layout.preferredHeight: 54
-            radius: 18
+            Layout.preferredWidth: root.artworkSize
+            Layout.preferredHeight: root.artworkSize
+            radius: root.artworkRadius
             color: "#000000"
             border.width: 1
             border.color: root.playing ? "#2a2a2a" : "#171717"
@@ -562,7 +570,7 @@ Item {
         ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
-            spacing: 2
+            spacing: root.sectionSpacing
 
             HandleStyleSwitch {
                 handleStyle: root.handleStyle
@@ -577,7 +585,7 @@ Item {
 
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 8
+                spacing: root.rowSpacing
 
                 Text {
                     Layout.fillWidth: true
@@ -646,7 +654,7 @@ Item {
 
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 7
+                spacing: root.rowSpacing
                 visible: root.mediaLength > 0
 
                 Text {
@@ -710,8 +718,8 @@ Item {
 
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
-                Layout.topMargin: 1
-                spacing: 7
+                Layout.topMargin: 2
+                spacing: root.controlSpacing
 
                 Rectangle {
                     Layout.preferredWidth: 24
@@ -889,19 +897,19 @@ Item {
         id: systemContent
 
         anchors.fill: parent
-        anchors.leftMargin: root.mediaHorizontalPadding
-        anchors.rightMargin: root.mediaHorizontalPadding
+        anchors.leftMargin: root.cardHorizontalPadding
+        anchors.rightMargin: root.cardHorizontalPadding
         opacity: root.mode === "idle" && root.forceExpanded && root.currentPage === "system" ? 1 : 0
         visible: opacity > 0
 
         ColumnLayout {
             anchors.fill: parent
-            spacing: 12
+            spacing: root.sectionSpacing
 
             // Header with only navigation button
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 8
+                spacing: root.rowSpacing
 
                 Text {
                     Layout.fillWidth: true
@@ -953,7 +961,7 @@ Item {
             // CPU Row
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 12
+                spacing: root.controlSpacing
 
                 Text {
                     text: "CPU"
@@ -1000,7 +1008,7 @@ Item {
             // RAM Row
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 12
+                spacing: root.controlSpacing
 
                 Text {
                     text: "RAM"
@@ -1047,7 +1055,7 @@ Item {
             // CPU Temp Row
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 12
+                spacing: root.controlSpacing
 
                 Text {
                     text: "TEMP"
